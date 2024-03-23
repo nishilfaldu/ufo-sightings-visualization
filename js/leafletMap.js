@@ -86,10 +86,21 @@ class LeafletMap {
 
                             //create a tool tip
                             d3.select('#tooltip')
-                                .style('opacity', 1)
-                                .style('z-index', 1000000)
-                                  // Format number with million and thousand separator
-                                .html(`<div class="tooltip-label">City Area: ${d.city_area}, Description: ${(d.description)}</div>`);
+                              .style('opacity', 1)
+                              .style('z-index', 1000000)
+                              .html(`
+                                City Area: ${d.city_area}<br>
+                                Country: ${d.country}<br>
+                                Date Documented: ${d.date_documented}<br>
+                                Date Time: ${d.date_time}<br>
+                                Described Encounter Length: ${d.described_encounter_length}<br>
+                                Description: ${d.description}<br>
+                                Encounter Length: ${d.encounter_length}<br>
+                                Latitude: ${d.latitude}<br>
+                                Longitude: ${d.longitude}<br>
+                                State: ${d.state}<br>
+                                UFO Shape: ${d.ufo_shape}
+                              `);
 
                           })
                         .on('mousemove', (event) => {
