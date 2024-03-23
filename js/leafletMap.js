@@ -10,6 +10,7 @@ class LeafletMap {
         parentElement: _config.parentElement,
       }
       this.data = _data;
+      this.baseLayer = null;
       this.initVis();
     }
     
@@ -53,12 +54,15 @@ class LeafletMap {
       ext: 'jpg'
     });
 
+    // console.log(this.baseLayer, "in here")
+
     vis.theMap = L.map('my-map', {
       center: [30, 0],
       zoom: 2,
       layers: [vis.base_layer]
     });
 
+    
     //if you stopped here, you would just have a map
 
     //initialize svg for d3 to add to map
@@ -155,11 +159,25 @@ class LeafletMap {
 
   }
 
+  changeBaseLayer(newBaseLayer) {
+    // Remove the current base layer
+    this.theMap.eachLayer((layer) => {
+      if (layer instanceof L.TileLayer) {
+        console.log(layer, "layer");
+          this.theMap.removeLayer(layer);
+      }
+  });
+  // Add the new base layer
+  this.baseLayer = newBaseLayer;
+  // Add the new base layer to the map
+  this.theMap.addLayer(this.baseLayer);
+  }
+
 
   renderVis() {
     let vis = this;
 
     //not using right now... 
  
-  }
+    }
   }
