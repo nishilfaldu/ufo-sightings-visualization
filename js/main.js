@@ -1,4 +1,4 @@
-d3.csv('data/ufoSample.csv')
+d3.csv('data/ufo_sightings.csv')
 .then(data => {
     console.log(data[0]);
     console.log(data.length);
