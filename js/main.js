@@ -1,42 +1,90 @@
+let uniqueYears = new Array(); 
+let uniqueShapes = new Array(); 
+
 d3.csv('data/ufo_sightings.csv')
 .then(data => {
     console.log(data);
     console.log(data.length);
 
     let notMappedCount = 0;
+    const years = new Set();
+    const shapes = new Set(); 
+    const shapeColors = {}; // Object to hold UFO shape to color mapping
+
+
+    // Process each data point
     data.forEach(d => {
         d.latitude = d.latitude && !isNaN(d.latitude) ? +d.latitude : null;
         d.longitude = d.longitude && !isNaN(d.longitude) ? +d.longitude : null;
         d.encounter_length = d.encounter_length ? +d.encounter_length : null;
+
+        // Increment notMappedCount if coordinates are missing
         if (!d.latitude || !d.longitude) {
-            console.log(d, "d")
             notMappedCount++;
         }
-      });
 
-    // Filter out data points with null latitude or longitude
-    data = data.filter(d => d.latitude !== null && d.longitude !== null);
+        // Handle UFO shape
+        const shape = d.ufo_shape; 
+        if(shape && typeof shape === 'string' && shape.toLowerCase() !== "na") {
+          // const normalizedShape = shape.charAt(0).toUpperCase() + shape.slice(1).toLowerCase();
+          shapes.add(shape);
 
-    // // Display the count of sightings not mapped
+          // Assign a color if not already done
+          if (!shapeColors[shape]) {
+            shapeColors[shape] = getRandomColorFromList();
+          }
+        }
+
+        // Handle year
+        const year = new Date(d.date_time).getFullYear();
+        if (!isNaN(year)) {
+            years.add(year);
+        }
+    });
+
+    // Convert sets to arrays for any further use
+    uniqueYears = Array.from(years);
+    uniqueShapes = Array.from(shapes); 
+
+    // Display the count of sightings not mapped
     const notMappedCountElement = document.getElementById("sightings-not-mapped");
     notMappedCountElement.innerHTML = `Sightings not mapped: ${notMappedCount}`;
 
-    
+    // Filter out data points with null latitude or longitude for mapping
+    const mappedData = data.filter(d => d.latitude !== null && d.longitude !== null);
+
     // Initialize chart and then show it
-    let leafletMap = new LeafletMap({ parentElement: '#my-map'}, data);
+    const leafletMap = new LeafletMap({ parentElement: '#my-map'}, mappedData, shapeColors);
+
+    // Setup event listeners after map initialization
+    setupEventListeners(leafletMap, uniqueYears, uniqueShapes, shapeColors);
+})
+.catch(error => console.error(error));
+
+function setupEventListeners(leafletMap, uniqueYears, uniqueShapes, shapeColors) {
+    // Listener for the color-by dropdown changes
+    const optionSelect = document.getElementById('color-by-dropdown');
+    optionSelect.addEventListener('change', function() {
+       const selectedCategory = this.value;
+       leafletMap.colorByPoints(selectedCategory, shapeColors); // Adjusted to pass shapeColors
+    }); 
 
     // Add event listener to the background select dropdown
     const backgroundSelect = document.getElementById('map-background-select');
     backgroundSelect.addEventListener('change', function(event) {
-        console.log(event.target.value)
         const selectedBaseLayer = event.target.value;
-        console.log(mapBackgrounds[selectedBaseLayer].layer)
         leafletMap.changeBaseLayer(mapBackgrounds[selectedBaseLayer].layer);
     });
-  })
-  .catch(error => console.error(error));
+}
 
-
+function getRandomColorFromList() {
+    const colors = [
+        '#FF5733', '#33FF57', '#3357FF', '#F1C40F', '#9B59B6', 
+        '#E74C3C', '#2ECC71', '#3498DB', '#F39C12', '#8E44AD',
+    ];
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    return colors[randomIndex];
+}
 
 // functions/constants
 const attributes = {
@@ -130,25 +178,128 @@ const attributes = {
     // Add more options for different map backgrounds
 };
 
+
   
-function colorByFeature() {
-    const colorByOptionsDiv = document.getElementById('color-by-options');
+// function colorByFeature() {
+//     const colorByOptionsDiv = document.getElementById('color-by-options');
 
-    const colorBySelect = document.createElement('select');
-    colorBySelect.setAttribute('id', 'color-by-select');
+//     const colorBySelect = document.createElement('select');
+//     colorBySelect.setAttribute('id', 'color-by-select');
 
-    for (const key in attributes) {
-        if (attributes.hasOwnProperty(key)) {
-            const option = document.createElement('option');
-            option.setAttribute('value', key);
-            option.textContent = attributes[key].label;
-            colorBySelect.appendChild(option);
-        }
+//     for (const key in attributes) {
+//         if (attributes.hasOwnProperty(key)) {
+//             const option = document.createElement('option');
+//             option.setAttribute('value', key);
+//             option.textContent = attributes[key].label;
+//             colorBySelect.appendChild(option);
+//         }
+//     }
+
+//     // Append the select element to the div
+//     colorByOptionsDiv.appendChild(colorBySelect);
+// }
+
+
+function colorByCategories() {
+  const colorByDiv = document.getElementById('color-by');
+  colorByDiv.style.display = 'flex'; // Align children inline
+  
+  const selectElement = document.createElement('select');
+  selectElement.id = 'color-by-dropdown';
+
+  const options = ['Year', 'Month', 'Time of Day', 'UFO Shape'];
+
+  options.forEach(optionText => {
+    const optionElement = document.createElement('option');
+    optionElement.value = optionText.toLowerCase().replace(' ', '-');
+    optionElement.textContent = optionText;
+    selectElement.appendChild(optionElement);
+  });
+
+  colorByDiv.appendChild(selectElement);
+
+  function clearDynamicElements() {
+    const dynamicElement = document.getElementById('dynamic-element');
+    if (dynamicElement) {
+      colorByDiv.removeChild(dynamicElement);
+    }
+  }
+
+  function createDropdown(options, id) {
+    const selectElement = document.createElement('select');
+    selectElement.id = id;
+    options.forEach(option => {
+      const optionElement = document.createElement('option');
+      optionElement.value = option;
+      optionElement.textContent = option;
+      selectElement.appendChild(optionElement);
+    });
+    return selectElement;
+  }
+
+  function createTimeOfDaySlider() {
+    const container = document.createElement('div');
+    container.style.display = 'flex'; // Align children inline
+    const slider = document.createElement('input');
+    slider.type = 'range';
+    slider.min = 1;
+    slider.max = 4;
+    slider.value = 1;
+    slider.id = 'time-of-day-slider';
+    slider.classList.add('slider'); 
+    
+    const output = document.createElement('div');
+    output.id = 'slider-output';
+    output.textContent = 'Morning'; 
+    // output.style.textAlign = 'center';
+    
+    const timeOfDayLabels = ['Morning', 'Afternoon', 'Evening', 'Night'];
+    
+    slider.oninput = function() {
+      output.textContent = timeOfDayLabels[this.value - 1];
+    }
+    const labelsContainer = document.createElement('div');
+  
+    container.appendChild(slider);
+    container.appendChild(output); 
+  
+    return container;
+  }
+  
+
+  selectElement.addEventListener('change', function() {
+    clearDynamicElements();
+
+    const dynamicElement = document.createElement('div');
+    dynamicElement.id = 'dynamic-element';
+
+    switch (this.value) {
+      case 'year':
+        uniqueYears.sort((a, b) => a - b);
+        console.log(uniqueYears); 
+        // const yearsDropdown = createDropdown(uniqueYears, 'years-dropdown');
+        // dynamicElement.appendChild(yearsDropdown);
+        break;
+      case 'month':
+        // const monthsDropdown = createDropdown(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], 'months-dropdown');
+        // dynamicElement.appendChild(monthsDropdown);
+        break;
+      case 'time-of day':
+        // const slider = createTimeOfDaySlider();
+        // dynamicElement.appendChild(slider);
+        break;
+      case 'ufo-shape':
+        console.log(uniqueShapes)
+        // const shapesDropdown = createDropdown(uniqueShapes, 'shapes-dropdown');
+        // dynamicElement.appendChild(shapesDropdown);
+        break;
     }
 
-    // Append the select element to the div
-    colorByOptionsDiv.appendChild(colorBySelect);
+    colorByDiv.appendChild(dynamicElement);
+  });
 }
+
+
 
 function chooseMapBackground() {
     const backgroundOptionsDiv = document.getElementById('map-background-options');
@@ -170,4 +321,5 @@ function chooseMapBackground() {
 
   
 chooseMapBackground();
-colorByFeature();
+// colorByFeature();
+colorByCategories();

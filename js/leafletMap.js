@@ -1,3 +1,43 @@
+
+const colorSchemes = {
+  'year': [
+      {label: '< 1940', color: '#d8f3dc'},
+      {label: '1940 - 1969', color: '#ffd166'},
+      {label: '1970 - 1999', color: '#ef476f'},
+      {label: '>= 2000', color: '#118ab2'}
+  ],
+  'month': [
+      {label: 'January', color: '#33C3F0'}, {label: 'February', color: '#2E5EAA'}, 
+      {label: 'March', color: '#A8DADC'}, {label: 'April', color: '#F4A261'},
+      {label: 'May', color: '#E9C46A'}, {label: 'June', color: '#2A9D8F'},
+      {label: 'July', color: '#F4A261'}, {label: 'August', color: '#E76F51'},
+      {label: 'September', color: '#2A9D8F'}, {label: 'October', color: '#264653'},
+      {label: 'November', color: '#1D3557'}, {label: 'December', color: '#457B9D'}
+  ],
+  'time-of day': [
+      {label: 'Night', color: '#023047'}, {label: 'Morning', color: '#F4A261'},
+      {label: 'Afternoon', color: '#2A9D8F'}, {label: 'Evening', color: '#33C3F0'}
+  ],
+  'ufo-shape': [
+      {label: 'Cylinder', color: '#ffadad'}, {label: 'Light', color: '#ffd6a5'},
+      {label: 'Circle', color: '#fdffb6'}, {label: 'Sphere', color: '#caffbf'},
+      {label: 'Disk', color: '#9bf6ff'}, {label: 'Fireball', color: '#a0c4ff'},
+      {label: 'Unknown', color: '#bdb2ff'}, {label: 'Oval', color: '#ffc6ff'},
+      {label: 'Other', color: '#fffffc'}, {label: 'Cigar', color: '#ffaaaa'},
+      {label: 'Rectangle', color: '#d0f4de'}, {label: 'Chevron', color: '#fde2e4'},
+      {label: 'Triangle', color: '#fad2e1'}, {label: 'Formation', color: '#c5dedd'},
+      {label: 'Delta', color: '#dbe7e4'}, {label: 'Changing', color: '#f0efeb'},
+      {label: 'Egg', color: '#d6e2e9'}, {label: 'Diamond', color: '#bcd4e6'},
+      {label: 'Flash', color: '#99c1de'}, {label: 'Teardrop', color: '#a2d2ff'},
+      {label: 'Cone', color: '#8d99ae'}, {label: 'Cross', color: '#edf2f4'},
+      {label: 'Pyramid', color: '#e29578'}, {label: 'Round', color: '#e85d04'},
+      {label: 'Crescent', color: '#dc2f02'}, {label: 'Flare', color: '#e63946'},
+      {label: 'Hexagon', color: '#f1faee'}, {label: 'Dome', color: '#a8dadc'},
+      {label: 'Changed', color: '#457b9d'}
+  ]
+};
+
+
 class LeafletMap {
 
     /**
@@ -5,11 +45,12 @@ class LeafletMap {
      * @param {Object}
      * @param {Array}
      */
-    constructor(_config, _data) {
+    constructor(_config, _data, _shapeColors) {
       this.config = {
         parentElement: _config.parentElement,
       }
       this.data = _data;
+      this.shapeColors = _shapeColors; 
       this.baseLayer = null;
       this.initVis();
     }
@@ -133,9 +174,106 @@ class LeafletMap {
     vis.theMap.on("zoomend", function(){
       vis.updateVis();
     });
+    vis.colorByPoints('year');
+    vis.drawLegend('year');
 
   }
+
   
+
+  colorByPoints(category) {
+    let vis = this;
+
+    function getColorForYear(year) {
+      if (year < 1940) {
+          return '#d8f3dc'; 
+      } else if (year < 1970) {
+          return '#ffd166'; 
+      } else if (year < 2000) {
+          return '#ef476f'; 
+      } else {
+          return '#118ab2';
+      }
+  }
+
+    function getColor(d) {
+        switch (category) {
+            case 'year':
+              const date = new Date(d.date_time);
+              const year = date.getFullYear();
+              return getColorForYear(year);
+
+            case 'month':
+                // Cooler colors for winter, warmer for spring, bright for summer, muted for fall
+                const monthColors = ['#33C3F0', '#2E5EAA', '#A8DADC', '#F4A261', '#E9C46A', '#2A9D8F', '#F4A261', '#E76F51', '#2A9D8F', '#264653', '#1D3557', '#457B9D'];
+                return monthColors[new Date(d.date_time).getMonth()];
+
+            case 'time-of day':
+                // Morning to evening gradient
+                const hour = new Date(d.date_time).getHours();
+                if (hour < 6) return '#023047'; // Night
+                else if (hour < 12) return '#F4A261'; // Morning
+                else if (hour < 18) return '#2A9D8F'; // Afternoon
+                else return '#264653'; // Evening
+
+                case 'ufo-shape':
+                  // Use precomputed shapeColors
+                  return vis.shapeColors[d.ufo_shape] || '#999999'; 
+            default:
+                return '#000000'; // Default color if no category matches
+        }
+    }
+
+    // Update the dots' fill color based on the selected category
+    vis.Dots.attr('fill', d => getColor(d));
+    // After coloring, update the legend to match the new category
+    vis.drawLegend(category);
+}
+
+drawLegend(category) {
+  let vis = this;
+  const colorScheme = colorSchemes[category];
+
+  // Check if a legend control already exists and remove it
+  if (vis.legendControl) {
+    vis.theMap.removeControl(vis.legendControl);
+  }
+
+  // Create a new Leaflet control for the legend
+  vis.legendControl = L.control({position: 'bottomright'}); // You can adjust position
+
+  // Method to add the legend to the map
+  vis.legendControl.onAdd = function (map) {
+    // Create a div with a class "legend"
+    var div = L.DomUtil.create('div', 'legend');
+    div.style.padding = '6px 8px';
+    div.style.background = 'white';
+    div.style.boxShadow = '0 0 15px rgba(0,0,0,0.2)';
+    div.style.borderRadius = '5px';
+    div.style.color = '#555';
+
+    // Add a title to the legend
+    let legendHtml = `<strong>Legend (${category})</strong><br/>`;
+
+    // Iterate over the color scheme for the current category
+    // And add color swatches to the legend
+    colorScheme.forEach(function(item) {
+      legendHtml += `
+        <i style="background: ${item.color}; width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7;"></i>
+        <span>${item.label}</span><br/>`;
+    });
+
+    // Insert the HTML into the div
+    div.innerHTML = legendHtml;
+    return div;
+  };
+
+  // Add the legend control to the map
+  vis.legendControl.addTo(vis.theMap);
+}
+
+
+
   updateVis() {
     let vis = this;
 
