@@ -124,6 +124,24 @@ class Timeline {
       .on("end", function ({ selection }) {
         if (!selection) vis.brushed(null);
       });
+
+    vis.xAxisLabel = vis.context
+      .append("text")
+      .attr("class", "x label")
+      .attr("text-anchor", "center")
+      .attr("x", 375)
+      .attr("y", 3)
+      .text("Date");
+
+    vis.yAxisLabel = vis.context
+      .append("text")
+      .attr("class", "y label")
+      .attr("text-anchor", "center")
+      .attr("y", -46)
+      .attr("dy", ".75em")
+      .attr("x", 90)
+      .attr("transform", "rotate(-90)")
+      .text("UFO Sightings");
   }
 
   /**
