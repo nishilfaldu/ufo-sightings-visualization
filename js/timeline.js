@@ -220,7 +220,7 @@ class Timeline {
               vis.yScaleFocus(d.close) - 15
             })`
           )
-          .text(Math.round(d.close));
+          .text(Math.round(d.close) + ' UFO sighting(s) on ' + d.date.toDateString());
       });
 
     // Update the axes
