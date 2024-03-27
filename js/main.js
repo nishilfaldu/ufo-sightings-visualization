@@ -23,17 +23,9 @@ d3.csv("data/ufo_sightings.csv")
     });
 
     date_array = sortByDates(date_array);
+    let csv = convertToCSV(date_array);
 
-    console.log("date array: ", date_array);
-
-    let dates = Object.keys(date_array);
-    // console.log(dates);
-    let frequency = Object.values(date_array);
-    // console.log(frequency);
-    for (var i = 0; i < dates.length; i++) {
-      ufo_frequency = ufo_frequency + dates[i] + "," + frequency[i] + "\n";
-    }
-    console.log("ufo_frequency: ", ufo_frequency);
+    console.log(csv);
 
     // Filter out data points with null latitude or longitude
     data = data.filter((d) => d.latitude !== null && d.longitude !== null);
@@ -223,9 +215,23 @@ function sortByDates(dates) {
   console.log("keys: ", keys);
   keys.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
-  let r = {};
-  for (let k of keys) r[k] = dates[k];
+  let r = [];
+  for(let i = 0; i < keys.length; i++){
+    let object = new Object();
+    object.date = keys[i];
+    object.close = dates[keys[i]]
+    r.push(object);
+  }
+
   return r;
+}
+
+function convertToCSV(arr) {
+  const array = [Object.keys(arr[0])].concat(arr)
+
+  return array.map(it => {
+    return Object.values(it).toString()
+  }).join('\n')
 }
 
 chooseMapBackground();
