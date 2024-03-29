@@ -39,20 +39,6 @@ const colorSchemes = {
 
 
 class LeafletMap {
-  /**
-   * Class constructor with basic configuration
-   * @param {Object}
-   * @param {Array}
-   */
-  constructor(_config, _data) {
-    this.config = {
-      parentElement: _config.parentElement,
-    };
-    this.data = _data;
-    this.baseLayer = null;
-    this.initVis();
-  }
-
 
     /**
      * Class constructor with basic configuration
@@ -74,6 +60,8 @@ class LeafletMap {
    */
   initVis() {
     let vis = this;
+
+    //ESRI
     vis.esriUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
     vis.esriAttr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
 
@@ -89,6 +77,7 @@ class LeafletMap {
     vis.stUrl = 'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}';
     vis.stAttr = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
+
     //this is the base map layer, where we are showing the map background
 
     // OLDER MAP LAYER
@@ -99,7 +88,6 @@ class LeafletMap {
     // });
 
     // NEW MAP LAYER
-
     vis.base_layer = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.{ext}', {
       minZoom: 1,
       maxZoom: 16,
