@@ -18,7 +18,8 @@ d3.csv("data/ufo_sightings.csv")
       }
       //   var dateTime = parseTime(d.date_time.split(" ")[0]);
       //   var date = dateTime.split(" ")[0];
-      var dateTime = d.date_time.split(" ")[0];
+      var justDate = d.date_time.split(" ")[0];
+      var dateTime = justDate.split('/')[0] + '/1/' + justDate.split('/')[2];
       date_array[dateTime] = (date_array[dateTime] || 0) + 1;
     });
 
@@ -219,7 +220,7 @@ function sortByDates(dates) {
   for(let i = 0; i < keys.length; i++){
     let object = new Object();
     object.date = keys[i];
-    object.close = dates[keys[i]]
+    object.close = dates[keys[i]];
     r.push(object);
   }
 

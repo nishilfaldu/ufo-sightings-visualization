@@ -14,10 +14,10 @@
   /* Tooltip */
   .tooltip circle {
     fill: none;
-    stroke: #78bd39;
+    stroke: black;
   }
   .tooltip text {
-    fill: #78bd39;
+    fill: black;
   }
   
   

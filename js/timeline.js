@@ -14,6 +14,8 @@ class Timeline {
       contextMargin: { top: 280, right: 10, bottom: 20, left: 45 },
     };
     this.data = _data;
+    this.monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
     this.initVis();
   }
 
@@ -220,7 +222,7 @@ class Timeline {
               vis.yScaleFocus(d.close) - 15
             })`
           )
-          .text(Math.round(d.close) + ' UFO sighting(s) on ' + d.date.toDateString());
+          .text(Math.round(d.close) + ' UFO sighting(s) during ' + vis.monthNames[d.date.getMonth()] + ' ' + d.date.getFullYear());
       });
 
     // Update the axes
