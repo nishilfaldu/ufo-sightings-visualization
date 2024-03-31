@@ -103,8 +103,8 @@ d3.csv('data/ufo_sightings.csv')
         });
 
         // Initialize and render chart
-        // let timeline = new Timeline({ parentElement: "#timeline" }, data);
-        // timeline.updateVis();
+        let timeline = new Timeline({ parentElement: "#timeline" }, data);
+        timeline.updateVis();
       })
       .catch((error) => console.error(error));
 })
