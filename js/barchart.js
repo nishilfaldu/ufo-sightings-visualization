@@ -9,7 +9,6 @@ class Barchart {
      */
     constructor(_config, _data) {
       // Configuration object with defaults
-      console.log(_data, "data in barchart")
       this.config = {
         parentElement: _config.parentElement,
         colorScale: _config.colorScale,
@@ -48,13 +47,11 @@ class Barchart {
   
       // Initialize scales and axes
       vis.uniqueShapes = [...new Set(vis.data.map(d => d.ufo_shape))]
-      console.log(vis.uniqueShapes, "unique shapes")
       // Initialize scales
       vis.colorScale = d3.scaleOrdinal()
-          .range(vis.colorScale) // dark blue to light blue
+          .range(vis.colorScale) 
           .domain(vis.uniqueShapes);
       
-      // Important: we flip array elements in the y output range to position the rectangles correctly
       vis.yScale = d3.scaleLinear()
           .range([vis.height, 0]) 
   
@@ -103,7 +100,6 @@ class Barchart {
       const aggregatedDataMap = d3.rollups(vis.data, v => v.length, d => d.ufo_shape);
       vis.aggregatedData = Array.from(aggregatedDataMap, ([key, count]) => ({ key, count }));
 
-      console.log(vis.aggregatedData, "aggregated data")
   
       // Specificy accessor functions
 
