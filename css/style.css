@@ -1,3 +1,57 @@
+#start-year-input {
+    width: 60px;
+  }
+  
+  .source {
+    margin-top: 40px;
+    font-size: 10px;
+    color: #888;
+  }
+  .source a {
+    color: #888;
+  }
+  
+  /* Tooltip */
+  .tooltip circle {
+    fill: none;
+    stroke: black;
+  }
+  .tooltip text {
+    fill: black;
+  }
+  
+  
+  /* Axes */
+  .axis line {
+    fill: none;
+    stroke: #8693a0;
+    shape-rendering: crispEdges;
+  }
+  .axis text {
+    font-size: 13px;
+    fill: #6b6b6b;
+  }
+  .axis-title {
+    font-size: 13px;
+    fill: #888;
+  }
+  .x-axis .domain {
+    stroke: #8693a0;
+  }
+  .y-axis .domain {
+    display: none;
+  }
+  
+  .chart-area {
+    fill: #a5b3bf;
+  }
+  .chart-line {
+    fill: none;
+    stroke: #517390;
+    stroke-width: 2px;
+    clip-path: url(#clip);
+  }
+  
 #my-map {
     width: 100%;
     height: 500px;
@@ -13,6 +67,7 @@
     font-weight: 600;
     padding: 2px 8px;
   }
+
   .tooltip-label {
     font-weight: 500;
     font-size: 10px;

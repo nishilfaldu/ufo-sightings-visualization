@@ -1,3 +1,100 @@
+var parseTime = d3.timeParse("%m/%d/%Y %H:%M");
+var date_array = {};
+let ufo_frequency = "date,close\n";
+
+d3.csv("data/ufo_sightings.csv")
+  .then((data) => {
+    // console.log(data);
+    // console.log(data.length);
+
+    let notMappedCount = 0;
+    data.forEach((d) => {
+      d.latitude = d.latitude && !isNaN(d.latitude) ? +d.latitude : null;
+      d.longitude = d.longitude && !isNaN(d.longitude) ? +d.longitude : null;
+      d.encounter_length = d.encounter_length ? +d.encounter_length : null;
+      if (!d.latitude || !d.longitude) {
+        // console.log(d, "d");
+        notMappedCount++;
+      }
+      //   var dateTime = parseTime(d.date_time.split(" ")[0]);
+      //   var date = dateTime.split(" ")[0];
+      var justDate = d.date_time.split(" ")[0];
+      var dateTime = justDate.split('/')[0] + '/1/' + justDate.split('/')[2];
+      date_array[dateTime] = (date_array[dateTime] || 0) + 1;
+    });
+
+    date_array = sortByDates(date_array);
+    let csv = convertToCSV(date_array);
+
+    console.log(csv);
+
+    // Filter out data points with null latitude or longitude
+    data = data.filter((d) => d.latitude !== null && d.longitude !== null);
+
+    // // Display the count of sightings not mapped
+    const notMappedCountElement = document.getElementById(
+      "sightings-not-mapped"
+    );
+    notMappedCountElement.innerHTML = `Sightings not mapped: ${notMappedCount}`;
+
+    // Initialize chart and then show it
+    // let leafletMap = new LeafletMap({ parentElement: "#my-map" }, data);
+
+    // Add event listener to the background select dropdown
+    const backgroundSelect = document.getElementById("map-background-select");
+    backgroundSelect.addEventListener("change", function (event) {
+      //   console.log(event.target.value);
+      const selectedBaseLayer = event.target.value;
+      //   console.log(mapBackgrounds[selectedBaseLayer].layer);
+      leafletMap.changeBaseLayer(mapBackgrounds[selectedBaseLayer].layer);
+    });
+
+    d3.csv("data/ufo_frequency.csv")
+      .then((data) => {
+        console.log("before data read");
+        console.log(data);
+        console.log(data.length);
+        data.forEach((d) => {
+          d.close = parseFloat(d.close); // Convert string to float
+          d.date = parseTime2(d.date); // Convert string to date object
+        });
+
+        // Initialize and render chart
+        let timeline = new Timeline({ parentElement: "#timeline" }, data);
+        timeline.updateVis();
+      })
+      .catch((error) => console.error(error));
+  })
+  .catch((error) => console.error(error));
+
+const parseTime2 = d3.timeParse("%m/%d/%Y");
+
+// functions/constants
+
+function sortByDates(dates) {
+  let keys = Object.keys(dates);
+  console.log("keys: ", keys);
+  keys.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+  let r = [];
+  for(let i = 0; i < keys.length; i++){
+    let object = new Object();
+    object.date = keys[i];
+    object.close = dates[keys[i]];
+    r.push(object);
+  }
+
+  return r;
+}
+
+function convertToCSV(arr) {
+  const array = [Object.keys(arr[0])].concat(arr)
+
+  return array.map(it => {
+    return Object.values(it).toString()
+  }).join('\n')
+}
+
 let uniqueYears = new Array(); 
 let uniqueShapes = new Array(); 
 
@@ -178,27 +275,21 @@ const attributes = {
     // Add more options for different map backgrounds
 };
 
+function colorByFeature() {
+  const colorByOptionsDiv = document.getElementById("color-by-options");
 
-  
-// function colorByFeature() {
-//     const colorByOptionsDiv = document.getElementById('color-by-options');
+  const colorBySelect = document.createElement("select");
+  colorBySelect.setAttribute("id", "color-by-select");
 
-//     const colorBySelect = document.createElement('select');
-//     colorBySelect.setAttribute('id', 'color-by-select');
-
-//     for (const key in attributes) {
-//         if (attributes.hasOwnProperty(key)) {
-//             const option = document.createElement('option');
-//             option.setAttribute('value', key);
-//             option.textContent = attributes[key].label;
-//             colorBySelect.appendChild(option);
-//         }
-//     }
-
-//     // Append the select element to the div
-//     colorByOptionsDiv.appendChild(colorBySelect);
-// }
-
+  for (const key in attributes) {
+    if (attributes.hasOwnProperty(key)) {
+      const option = document.createElement("option");
+      option.setAttribute("value", key);
+      option.textContent = attributes[key].label;
+      colorBySelect.appendChild(option);
+    }
+  }
+}
 
 function colorByCategories() {
   const colorByDiv = document.getElementById('color-by');
@@ -321,5 +412,5 @@ function chooseMapBackground() {
 
   
 chooseMapBackground();
-// colorByFeature();
+colorByFeature();
 colorByCategories();
