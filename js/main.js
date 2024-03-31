@@ -87,6 +87,7 @@ d3.csv('data/ufo_sightings.csv')
 
     // Initialize chart and then show it
     const leafletMap = new LeafletMap({ parentElement: '#my-map'}, mappedData, shapeColors);
+    const barchart = new Barchart({ parentElement: '#barchart' }, mappedData);
     
     // Setup event listeners after map initialization
     setupEventListeners(leafletMap, uniqueYears, uniqueShapes, shapeColors);
@@ -102,8 +103,8 @@ d3.csv('data/ufo_sightings.csv')
         });
 
         // Initialize and render chart
-        let timeline = new Timeline({ parentElement: "#timeline" }, data);
-        timeline.updateVis();
+        // let timeline = new Timeline({ parentElement: "#timeline" }, data);
+        // timeline.updateVis();
       })
       .catch((error) => console.error(error));
 })
