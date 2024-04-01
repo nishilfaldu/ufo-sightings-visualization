@@ -93,7 +93,7 @@ d3.csv("data/ufo_sightings.csv")
         { parentElement: "#barchart" },
         filteredData
       );
-      const tod = new Barchart({ parentElement: "#tod" }, filteredData);
+      const tod = new TOD({ parentElement: "#tod" }, filteredData);
 
       const bc = new BC({
         data: encounterLengths,
