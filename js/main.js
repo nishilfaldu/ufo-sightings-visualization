@@ -161,7 +161,7 @@ d3.csv('data/ufo_sightings.csv')
             d.date = parseTime2(d.date);
           });
 
-          let histogram = new Histogram({parentElement: "#annual-cycle-histogram"}, data);
+          let cycleHistogram = new CycleHistogram({parentElement: "#annual-cycle-histogram"}, data);
         })
         .catch((error) => console.error(error));
 })

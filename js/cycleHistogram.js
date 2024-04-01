@@ -1,4 +1,4 @@
-class Histogram{
+class CycleHistogram{
     constructor(_config, _data) {
         this.config = {
           parentElement: _config.parentElement,
