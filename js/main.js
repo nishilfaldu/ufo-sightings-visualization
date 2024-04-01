@@ -22,6 +22,17 @@ function sortByDates(dates) {
   return r;
 }
 
+// Function to populate options for the second dropdown based on the selection in the first dropdown
+function populateSecondDropdown(selectedOption, secondDropdownOptions) {
+  const secondDropdown = document.getElementById('second-dropdown');
+  secondDropdown.innerHTML = ''; // Clear existing options
+  secondDropdownOptions[selectedOption].forEach(option => {
+      const optionElement = document.createElement('option');
+      optionElement.textContent = option;
+      secondDropdown.appendChild(optionElement);
+  });
+}
+
 function convertToCSV(arr) {
   const array = [Object.keys(arr[0])].concat(arr)
 
@@ -43,6 +54,42 @@ d3.csv('data/ufo_sightings.csv')
     const shapes = new Set(); 
     const shapeColors = {}; // Object to hold UFO shape to color mapping
 
+    // Define options for the second dropdown based on the selection in the first dropdown
+    const secondDropdownOptions = {
+      date_time: extractUniqueYears(data),
+      city_area: [...new Set(data.map(d => d.city_area))], 
+      state: [...new Set(data.map(d => d.state))], 
+      country: [...new Set(data.map(d => d.country))], 
+      ufo_shape: [...new Set(data.map(d => d.ufo_shape))], 
+    };
+
+    console.log(secondDropdownOptions, "secondDropdownOptions");
+
+    // Attach event listener to the first dropdown
+    const firstDropdown = document.getElementById('first-dropdown');
+    firstDropdown.addEventListener('change', function(event) {
+        const selectedOption = event.target.value;
+        console.log(selectedOption);
+        populateSecondDropdown(selectedOption, secondDropdownOptions);
+    });
+
+    populateSecondDropdown(firstDropdown.value, secondDropdownOptions);
+
+    const secondDropdown = document.getElementById('second-dropdown');
+    secondDropdown.addEventListener('change', function(event) {
+      d3.select('#barchart').selectAll('*').remove();
+
+      const selectedOption = firstDropdown.value;
+      const selectedValue = event.target.value;
+      const filteredData = filterData(secondDropdownOptions, selectedOption, selectedValue, data);
+      const barchart = new Barchart({ parentElement: '#barchart' }, filteredData);
+  });
+
+  // only used for initial rendering
+  const selectedOption = firstDropdown.value;
+  const secondDropdownValue = secondDropdown.value;
+  const filteredData = filterData(secondDropdownOptions, selectedOption, secondDropdownValue, data);
+  const barchart = new Barchart({ parentElement: '#barchart' }, filteredData);
 
     // Process each data point
     data.forEach(d => {
@@ -87,14 +134,13 @@ d3.csv('data/ufo_sightings.csv')
 
     // Initialize chart and then show it
     const leafletMap = new LeafletMap({ parentElement: '#my-map'}, mappedData, shapeColors);
-    const barchart = new Barchart({ parentElement: '#barchart' }, mappedData);
+    // const barchart = new Barchart({ parentElement: '#barchart' }, mappedData);
     
     // Setup event listeners after map initialization
     setupEventListeners(leafletMap, uniqueYears, uniqueShapes, shapeColors);
 
     d3.csv("data/ufo_frequency.csv")
       .then((data) => {
-        console.log("before data read");
         console.log(data);
         console.log(data.length);
         data.forEach((d) => {
@@ -362,6 +408,37 @@ function chooseMapBackground() {
     backgroundOptionsDiv.appendChild(backgroundSelect);
 }
 
+// Function to filter data based on the selected value in the second dropdown
+function filterData(secondDropdownOptions, selectedOption, selectedValue, data) {
+  if (selectedOption === "date_time") {
+    // Filter the data to include only entries with the selected year
+    return data.filter(d => {
+      const date = new Date(d.date_time);
+      return date.getFullYear() === Number(selectedValue);
+    });
+  } else if (secondDropdownOptions[selectedOption]) {
+    return data.filter(d => d[selectedOption] === selectedValue);
+  } else {
+      // If the selected option is not valid, return the original data
+      return data;
+  }
+}
+
+// Function to parse date_time entries and extract unique years
+function extractUniqueYears(data) {
+  const uniqueYears = new Set();
+  data.forEach(d => {
+      // Split the date_time string by '/'
+      const parts = d.date_time.split('/');
+      if (parts.length === 3) { // Ensure the date_time format is valid
+          // Extract the year part and add it to the set
+          const year = parseInt(parts[2]);
+          uniqueYears.add(year);
+      }
+  });
+  // Convert the set to an array of unique years
+  return Array.from(uniqueYears);
+}
   
 chooseMapBackground();
 colorByFeature();

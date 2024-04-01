@@ -143,9 +143,7 @@ class Barchart {
               .style("top", event.pageY - 10 + "px")
               .style("left", event.pageX + 10 + "px");
           })
-          .on("mouseout", function() {
-            d3.select(this).style("fill", attributesInfo[attribute].color);
-      
+          .on("mouseout", function() {      
             vis.tooltip.style("visibility", "hidden");
           })
       
