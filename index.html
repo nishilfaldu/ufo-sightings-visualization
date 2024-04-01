@@ -13,9 +13,22 @@
     <div id="map-background-options"></div>
     <div id = "color-by">Color By </div>
     <div id="my-map"></div>
-    <!-- <div id="mapId" style="width: 600px; height: 400px;"></div> -->
-    <svg id="barchart"></svg>
-    <svg id="timeline"></svg>
+    <div style="display: flex; flex-direction: column">
+      <div>
+        <select id="first-dropdown">
+          <option value="date_time">Year</option>
+          <option value="city_area">City Area</option>
+          <option value="state">State</option>
+          <option value="country">Country</option>
+          <option value="ufo_shape">UFO Shape</option>
+        </select>
+        <select id="second-dropdown"></select>
+      </div>
+      <!-- <div id="mapId" style="width: 600px; height: 400px;"></div> -->
+      <svg id="barchart"></svg>
+      <svg id="timeline"></svg>
+    </div>
+    
 
     <script src="js/d3.v6.min.js"></script>
     <script type="module" src="js/main.js"></script>
