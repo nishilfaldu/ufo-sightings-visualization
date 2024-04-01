@@ -27,6 +27,14 @@
       <!-- <div id="mapId" style="width: 600px; height: 400px;"></div> -->
       <svg id="barchart"></svg>
       <svg id="timeline"></svg>
+      <div>
+        <select id="annual-cycle-dropdown">
+          <option value="month">By Month</option>
+          <option value="day">By Day of the Week</option>
+          <option value="season">By Season</option>
+        </select>
+      </div>
+      <svg id="annual-cycle-histogram" height="250"></svg>
     </div>
     
 
@@ -36,6 +44,7 @@
     <script src="js/leafletMap.js"></script>
     <script src="js/barchart.js"></script>
     <script src="js/timeline.js"></script>
+    <script src="js/histogram.js"></script>
 
     <div id="tooltip"></div>
   </body>
