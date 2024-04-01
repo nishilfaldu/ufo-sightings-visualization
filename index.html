@@ -3,15 +3,15 @@
   <head>
     <title>Interactive Map of UFO Sightings</title>
     <link rel="icon" href="data:;base64,iVBORwOKGO=" />
-    <link rel="stylesheet" href="css/leaflet.css">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
     <h1>Interactive Map of UFO Sightings</h1>
     <h3 id="sightings-not-mapped"></h3>
     <!-- <div id="color-by-options"></div> -->
     <div id="map-background-options"></div>
-    <div id = "color-by">Color By </div>
+    <div id="color-by">Color By</div>
     <div id="my-map"></div>
     <div style="display: flex; flex-direction: column">
       <div>
@@ -26,6 +26,7 @@
       </div>
       <!-- <div id="mapId" style="width: 600px; height: 400px;"></div> -->
       <svg id="barchart"></svg>
+      <svg id="tod"></svg>
       <div>
         <select id="annual-cycle-dropdown">
           <option value="month">By Month</option>
@@ -34,20 +35,20 @@
         </select>
       </div>
       <svg id="annual-cycle-histogram" height="250"></svg>
-      <svg id="timeline"></svg><br>
-      <div id = "bc">Frequency of Encounter Length</div>
+      <svg id="timeline"></svg><br />
+      <div id="bc">Frequency of Encounter Length</div>
     </div>
-    
 
     <script src="js/d3.v6.min.js"></script>
     <script type="module" src="js/main.js"></script>
-    <script src="js/leaflet.js"></script>
-    <script src="js/leafletMap.js"></script>
+    <!-- <script src="js/leaflet.js"></script> -->
+    <!-- <script src="js/leafletMap.js"></script> -->
     <script src="js/barchart.js"></script>
-    <script src="js/timeline.js"></script>
-    <script src="js/cycleHistogram.js"></script>
+    <script src="js/tod.js"></script>
+    <!-- <script src="js/timeline.js"></script> -->
+    <!-- <script src="js/cycleHistogram.js"></script> -->
     <!-- <script src = "js/histogram.js"></script> -->
-    <script src = "js/bc.js"></script>
+    <!-- <script src="js/bc.js"></script> -->
 
     <div id="tooltip"></div>
   </body>
