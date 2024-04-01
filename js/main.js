@@ -80,51 +80,66 @@ d3.csv('data/ufo_sightings.csv')
     const secondDropdown = document.getElementById('second-dropdown');
     secondDropdown.addEventListener('change', function(event) {
       d3.select('#barchart').selectAll('*').remove();
-
       const selectedOption = firstDropdown.value;
       const selectedValue = event.target.value;
       const filteredData = filterData(secondDropdownOptions, selectedOption, selectedValue, data);
-      const barchart = new Barchart({ parentElement: '#barchart' }, filteredData, "ufo_shape");
+      const barchart = new Barchart({ parentElement: '#barchart' }, filteredData);
+ 
+      const bc = new BC({
+      data: encounterLengths,
+      element: '#bc', // The selector for the container to hold the bar chart
+      width: 1790,
+      height: 1200,
+    });
+
   });
+
+
+    // Process each data point
+    data.forEach(d => {
+      d.latitude = d.latitude && !isNaN(d.latitude) ? +d.latitude : null;
+      d.longitude = d.longitude && !isNaN(d.longitude) ? +d.longitude : null;
+      d.encounter_length = d.encounter_length ? +d.encounter_length : null;
+      if(d.encounter_length && !isNaN(d.encounter_length)) {
+        encounterLengths.push(+d.encounter_length); // Unary plus ensures it's a number
+    }
+
+      // Increment notMappedCount if coordinates are missing
+      if (!d.latitude || !d.longitude) {
+          notMappedCount++;
+      }
+
+      // Handle UFO shape
+      const shape = d.ufo_shape; 
+      if(shape && typeof shape === 'string' && shape.toLowerCase() !== "na") {
+        // const normalizedShape = shape.charAt(0).toUpperCase() + shape.slice(1).toLowerCase();
+        shapes.add(shape);
+
+        // Assign a color if not already done
+        if (!shapeColors[shape]) {
+          shapeColors[shape] = getRandomColorFromList();
+        }
+      }
+
+      // Handle year
+      const year = new Date(d.date_time).getFullYear();
+      if (!isNaN(year)) {
+          years.add(year);
+      }
+  });
+
 
   // only used for initial rendering
   const selectedOption = firstDropdown.value;
   const secondDropdownValue = secondDropdown.value;
   const filteredData = filterData(secondDropdownOptions, selectedOption, secondDropdownValue, data);
   const barchart = new Barchart({ parentElement: '#barchart' }, filteredData);
-
-    // Process each data point
-    data.forEach(d => {
-        d.latitude = d.latitude && !isNaN(d.latitude) ? +d.latitude : null;
-        d.longitude = d.longitude && !isNaN(d.longitude) ? +d.longitude : null;
-        d.encounter_length = d.encounter_length ? +d.encounter_length : null;
-        if(d.encounter_length && !isNaN(d.encounter_length)) {
-          encounterLengths.push(+d.encounter_length); // Unary plus ensures it's a number
-      }
-
-        // Increment notMappedCount if coordinates are missing
-        if (!d.latitude || !d.longitude) {
-            notMappedCount++;
-        }
-
-        // Handle UFO shape
-        const shape = d.ufo_shape; 
-        if(shape && typeof shape === 'string' && shape.toLowerCase() !== "na") {
-          // const normalizedShape = shape.charAt(0).toUpperCase() + shape.slice(1).toLowerCase();
-          shapes.add(shape);
-
-          // Assign a color if not already done
-          if (!shapeColors[shape]) {
-            shapeColors[shape] = getRandomColorFromList();
-          }
-        }
-
-        // Handle year
-        const year = new Date(d.date_time).getFullYear();
-        if (!isNaN(year)) {
-            years.add(year);
-        }
-    });
+  const bc = new BC({
+    data: encounterLengths,
+    element: '#bc', // The selector for the container to hold the bar chart
+    width: 1790,
+    height: 1200,
+  });
 
     // Convert sets to arrays for any further use
     uniqueYears = Array.from(years);
@@ -139,13 +154,6 @@ d3.csv('data/ufo_sightings.csv')
 
     // Initialize chart and then show it
     const leafletMap = new LeafletMap({ parentElement: '#my-map'}, mappedData, shapeColors);
-
-    const bc = new BC({
-      data: encounterLengths,
-      element: '#bc', // The selector for the container to hold the bar chart
-      width: 1790,
-      height: 1200,
-    });
 
 
     setupEventListeners(leafletMap, uniqueYears, uniqueShapes, shapeColors);
