@@ -1,6 +1,8 @@
 var parseTime = d3.timeParse("%m/%d/%Y %H:%M");
 var date_array = {};
 let ufo_frequency = "date,close\n";
+let encounterLengths = [];
+
 
 const parseTime2 = d3.timeParse("%m/%d/%Y");
 
@@ -82,7 +84,7 @@ d3.csv('data/ufo_sightings.csv')
       const selectedOption = firstDropdown.value;
       const selectedValue = event.target.value;
       const filteredData = filterData(secondDropdownOptions, selectedOption, selectedValue, data);
-      const barchart = new Barchart({ parentElement: '#barchart' }, filteredData);
+      const barchart = new Barchart({ parentElement: '#barchart' }, filteredData, "ufo_shape");
   });
 
   // only used for initial rendering
@@ -96,6 +98,9 @@ d3.csv('data/ufo_sightings.csv')
         d.latitude = d.latitude && !isNaN(d.latitude) ? +d.latitude : null;
         d.longitude = d.longitude && !isNaN(d.longitude) ? +d.longitude : null;
         d.encounter_length = d.encounter_length ? +d.encounter_length : null;
+        if(d.encounter_length && !isNaN(d.encounter_length)) {
+          encounterLengths.push(+d.encounter_length); // Unary plus ensures it's a number
+      }
 
         // Increment notMappedCount if coordinates are missing
         if (!d.latitude || !d.longitude) {
@@ -134,9 +139,15 @@ d3.csv('data/ufo_sightings.csv')
 
     // Initialize chart and then show it
     const leafletMap = new LeafletMap({ parentElement: '#my-map'}, mappedData, shapeColors);
-    // const barchart = new Barchart({ parentElement: '#barchart' }, mappedData);
-    
-    // Setup event listeners after map initialization
+
+    const bc = new BC({
+      data: encounterLengths,
+      element: '#bc', // The selector for the container to hold the bar chart
+      width: 1790,
+      height: 1200,
+    });
+
+
     setupEventListeners(leafletMap, uniqueYears, uniqueShapes, shapeColors);
 
     d3.csv("data/ufo_frequency.csv")
@@ -387,8 +398,6 @@ function colorByCategories() {
     colorByDiv.appendChild(dynamicElement);
   });
 }
-
-
 
 function chooseMapBackground() {
     const backgroundOptionsDiv = document.getElementById('map-background-options');
