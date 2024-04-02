@@ -19,7 +19,14 @@ To run this code, use the Live Preview Extension by Microsoft within Visual Stud
 ---
 
 ### Motivation
-
+The motivation behind this project is to help users understand and find patterns in data of UFO sightings. A variety of visualizations and ways to compare them should allow a user to draw various conclusions about what types of UFO sightings are reported, and correlate them with:
+- Geographical Location
+- Date
+- Time of Year (such as by month, season, day of week, etc.)
+- Length of Reported Encounter
+- Time of Day
+- Words used to describe encounter
+ 
 ---
 
 ### Data Used
