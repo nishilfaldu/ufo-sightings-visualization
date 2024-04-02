@@ -51,10 +51,10 @@ In each of the above charts, hovering over a datapoint will allow a user to see 
 ### Sketches & Justification
 
 Several sketches were made to aid in the design process:
-- For the B goals: ![B Goal sketches](https://imgur.com/phsYBpZ)
-- For the A goals: ![A Goal sketches](https://imgur.com/h59P4Yn)
-- For organizing data: ![Organizing Data sketches](https://imgur.com/jmSwJmw) ![More organizing data sketches](https://imgur.com/D2WAKg6)
-- For trends in data: ![Data trends sketches](https://imgur.com/3kT9Lao)
+- For the B goals: ![B Goal sketches](https://i.imgur.com/phsYBpZ.png)
+- For the A goals: ![A Goal sketches](https://i.imgur.com/h59P4Yn.png)
+- For organizing data: ![Organizing Data sketches](https://i.imgur.com/jmSwJmw.png) ![More organizing data sketches](https://i.imgur.com/D2WAKg6.png)
+- For trends in data: ![Data trends sketches](https://i.imgur.com/3kT9Lao.png)
 
 ---
 
