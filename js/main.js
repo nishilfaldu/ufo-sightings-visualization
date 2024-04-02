@@ -81,6 +81,7 @@ d3.csv("data/ufo_sightings.csv")
     const secondDropdown = document.getElementById("second-dropdown");
     secondDropdown.addEventListener("change", function (event) {
       d3.select("#barchart").selectAll("*").remove();
+      d3.select("#bc").selectAll("*").remove();
       d3.select("#tod").selectAll("*").remove();
       const selectedOption = firstDropdown.value;
       const selectedValue = event.target.value;
@@ -101,20 +102,7 @@ d3.csv("data/ufo_sightings.csv")
         data: filteredData,
         element: "#bc", // The selector for the container to hold the bar chart
       });
-    const secondDropdown = document.getElementById('second-dropdown');
-    secondDropdown.addEventListener('change', function(event) {
-      d3.select('#barchart').selectAll('*').remove();
-      d3.select("#bc").selectAll("*").remove()
-      const selectedOption = firstDropdown.value;
-      const selectedValue = event.target.value;
-      const filteredData = filterData(secondDropdownOptions, selectedOption, selectedValue, data);
-      const barchart = new Barchart({ parentElement: '#barchart' }, filteredData);
-      
-      const bc = new BC({
-        data: filteredData,
-        element: "#bc", // The selector for the container to hold the bar chart
-      });
-    });
+    })
 
     // Process each data point
     data.forEach((d) => {
