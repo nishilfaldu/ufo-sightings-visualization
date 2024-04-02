@@ -82,4 +82,11 @@ These visualizations were made using the [d3 library](https://d3js.org/) and jav
 
 ### Distribution of Tasks
 
+The tasks were distributed among the group members as follows:
+
+- William Balfour: Timeline, Annual Cycles visualization, documentation
+- Nishanth Chidambaram: Timeline, Time of Day visualization, Textual descriptions visualization
+- Nishil Faldu: Map, UFO Shape visualization, Brushing and Linking of the Map
+- Athulya Ganesh: Map, Encounter Length visualization, Brushing and Linking
+
 ---
