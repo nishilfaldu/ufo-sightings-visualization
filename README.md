@@ -31,9 +31,20 @@ The motivation behind this project is to help users understand and find patterns
 
 ### Data Used
 
+The dataset was obtained from the [National UFO Reporting Center](https://nuforc.org/). It includes a significant amount of information over UFO sightings, with over 80 thousand unique encounters, including dates, times, locations, and descriptions. The raw data can be found within the data folder of the project.
+
 ---
 
 ### Visualization Component
+
+There are several visualization components, which will allow a user to view, compare, and draw conclusions from the data. These include:
+- An interactive map with locations of various encounters. This map can be zoomed and panned with the mouse, as well as brushed using a toggle. Points on the map are colored, and may be recolored using the above dropdown by year, month, time of day, and UFO shape.
+- A timeline, which can be brushed to see finer details. This tracks changes in the number of UFO sightings by month.
+- A Bar Chart that will allow the user to see different cycles in UFO sighting frequency. A dropdown above will allow the user to sort the bars by day of the week, season, and month.
+- A Bar Chart that organizes the data by UFO shape, allowing the user to see which shapes are the most common.
+- A Bar Chart allowing the user to organize the data by time of day (such as morning, evening, etc.)
+- A Histogram that will allow a user to compare UFO encounters by length.
+In each of the above charts, hovering over a datapoint will allow a user to see more detailed data, such as the exact date, frequency, or description. This varies by the chart.
 
 ---
 
