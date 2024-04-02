@@ -160,10 +160,12 @@ d3.csv("data/ufo_sightings.csv")
 
     const timelineData = d3.rollups(
       data, v => v.length, d => (new Date(d.date_time).getMonth() + 1).toString() + "/" + new Date(d.date_time).getDate().toString() + "/" + new Date(d.date_time).getFullYear()
-      ).map(([key, value]) => ({ date: key, close: value }));
+      ).map(([key, value]) => ({ date: parseTime2(key), close: value }));
       console.log(timelineData, "timelineData");
 
-    const timeline = new Timeline({ parentElement: "#timeline" }, timelineData);
+      console.log(data, "data before timeline")
+    const timeline = new Timeline({ parentElement: "#timeline" }, timelineData, data);
+    // timeline.updateVis();
 
     // Convert sets to arrays for any further use
     uniqueYears = Array.from(years);
@@ -189,20 +191,20 @@ d3.csv("data/ufo_sightings.csv")
 
     setupEventListeners(leafletMap, uniqueYears, uniqueShapes, shapeColors);
 
-    d3.csv("data/ufo_frequency.csv")
-      .then((data) => {
-        console.log(data);
-        console.log(data.length);
-        data.forEach((d) => {
-          d.close = parseFloat(d.close); // Convert string to float
-          d.date = parseTime2(d.date); // Convert string to date object
-        });
-
-        // Initialize and render chart
-        let timeline = new Timeline({ parentElement: "#timeline" }, data);
-        timeline.updateVis();
-      })
-      .catch((error) => console.error(error));
+    // d3.csv("data/ufo_frequency.csv")
+    //   .then((data) => {
+    //     console.log(data);
+    //     console.log(data.length);
+    //     data.forEach((d) => {
+    //       d.close = parseFloat(d.close); // Convert string to float
+    //       d.date = parseTime2(d.date); // Convert string to date object
+    //     });
+    //     console.log(data, "data in csv")
+    //     // Initialize and render chart
+    //     let timeline = new Timeline({ parentElement: "#timeline" }, data);
+    //     timeline.updateVis();
+    //   })
+    //   .catch((error) => console.error(error));
 
     d3.csv("data/ufo_frequency.csv")
       .then((data) => {

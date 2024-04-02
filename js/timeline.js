@@ -4,7 +4,7 @@ class Timeline {
    * @param {Object}
    * @param {Array}
    */
-  constructor(_config, _data) {
+  constructor(_config, _data, _actualData) {
     this.config = {
       parentElement: _config.parentElement,
       width: 800,
@@ -15,7 +15,7 @@ class Timeline {
     };
     this.data = _data;
     this.monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
+    this.actualData = _actualData;
     this.initVis();
   }
 
@@ -144,6 +144,8 @@ class Timeline {
       .attr("x", 90)
       .attr("transform", "rotate(-90)")
       .text("UFO Sightings");
+
+      vis.updateVis();
   }
 
   /**
@@ -240,12 +242,18 @@ class Timeline {
     vis.brushG.call(vis.brush).call(vis.brush.move, defaultBrushSelection);
   }
 
+  processDate(date) {
+    return (new Date(date).getMonth() + 1).toString() + "/" + new Date(date).getDate().toString() + "/" + new Date(date).getFullYear()
+  }
+
   /**
    * React to brush events
    */
   brushed(selection) {
     console.log(selection, "selection")
     let vis = this;
+
+    console.log(vis.actualData, "actualData in brushed 1")
 
     // Check if the brush is still active or if it has been removed
     if (selection) {
@@ -255,9 +263,22 @@ class Timeline {
         vis.xScaleContext
       );
 
-      const dStart = (new Date(selectedDomain[0]).getMonth() + 1).toString() + "/" + new Date(selectedDomain[0]).getDate().toString() + "/" + new Date(selectedDomain[0]).getFullYear()
-      const dEnd = (new Date(selectedDomain[1]).getMonth() + 1).toString() + "/" + new Date(selectedDomain[1]).getDate().toString() + "/" + new Date(selectedDomain[1]).getFullYear()
+      console.log(selectedDomain, "selectedDomain")
+
+      const dStart = this.processDate(selectedDomain[0])
+      const dEnd = this.processDate(selectedDomain[1])
         console.log(dStart, "dStart", dEnd, "dEnd")
+
+        console.log(vis.actualData, "actualData in brushed")
+      // filter out those entries that are within the selected time period
+      const filteredData = vis.actualData.filter(d => {
+        const date = new Date(this.processDate(d.date_time))
+        const dStartDate = new Date(dStart)
+        const dEndDate = new Date(dEnd)
+        return date >= dStartDate && date <= dEndDate
+      })
+
+      console.log(filteredData, "filteredData")
 
       // Update x-scale of the focus view accordingly
       vis.xScaleFocus.domain(selectedDomain);
