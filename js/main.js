@@ -152,7 +152,7 @@ d3.csv("data/ufo_sightings.csv")
     const barchart = new Barchart({ parentElement: "#barchart" }, filteredData);
     const tod = new TimeOfDayBarChart({ parentElement: "#tod" }, filteredData);
     const bc = new BC({
-      data: encounterLengths,
+      data: filteredData,
       element: "#bc", // The selector for the container to hold the bar chart
       width: 1790,
       height: 1200,
