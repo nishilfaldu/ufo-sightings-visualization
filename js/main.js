@@ -96,6 +96,9 @@ d3.csv("data/ufo_sightings.csv")
         filteredData
       );
 
+      const timelineData = filteredData.rollups(filteredData, v => v.length, d => new Date(d.date_time).getDate());
+      console.log(timelineData, "timelineData");
+
       const tod = new TimeOfDayBarChart({ parentElement: "#tod" }, filteredData);
 
       const bc = new BC({
@@ -154,6 +157,13 @@ d3.csv("data/ufo_sightings.csv")
       width: 1790,
       height: 1200,
     });
+
+    const timelineData = d3.rollups(
+      data, v => v.length, d => (new Date(d.date_time).getMonth() + 1).toString() + "/" + new Date(d.date_time).getDate().toString() + "/" + new Date(d.date_time).getFullYear()
+      ).map(([key, value]) => ({ date: key, close: value }));
+      console.log(timelineData, "timelineData");
+
+    const timeline = new Timeline({ parentElement: "#timeline" }, timelineData);
 
     // Convert sets to arrays for any further use
     uniqueYears = Array.from(years);

@@ -168,8 +168,10 @@ class Timeline {
       .y0(vis.config.contextHeight);
 
     // Set the scale input domains
+    // line chart
     vis.xScaleFocus.domain(d3.extent(vis.data, vis.xValue));
     vis.yScaleFocus.domain(d3.extent(vis.data, vis.yValue));
+    // area chart
     vis.xScaleContext.domain(vis.xScaleFocus.domain());
     vis.yScaleContext.domain(vis.yScaleFocus.domain());
 
@@ -242,6 +244,7 @@ class Timeline {
    * React to brush events
    */
   brushed(selection) {
+    console.log(selection, "selection")
     let vis = this;
 
     // Check if the brush is still active or if it has been removed
