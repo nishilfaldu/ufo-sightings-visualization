@@ -177,7 +177,7 @@ d3.csv("data/ufo_sightings.csv")
     );
 
     console.log(data, "data before timeline")
-    const timeline = new Timeline({ parentElement: "#timeline" }, timelineData, data);
+    const timeline = new Timeline({ parentElement: "#timeline" }, GroupByMonth(timelineData), data);
     // timeline.updateVis();
 
     // Convert sets to arrays for any further use
@@ -513,6 +513,30 @@ function extractUniqueYears(data) {
   });
   // Convert the set to an array of unique years
   return Array.from(uniqueYears);
+}
+
+function GroupByMonth(data){
+  let groupedData = [];
+  let dayToMonth = data.map(x => ({...x, date: new Date(x.date.getFullYear(), x.date.getMonth(), 1)}));
+  let sumPerMonth = dayToMonth.reduce((acc, cur) =>{
+    acc[cur.date] = acc[cur.date] + cur.close || cur.close;
+    return acc;
+  }, {});
+  groupedData = [];
+  for(let i = 0; i < Object.keys(sumPerMonth).length; i++){
+    let key = Object.keys(sumPerMonth)[i];
+    let object = {
+      date: new Date(key),
+      close: sumPerMonth[key]
+    }
+    groupedData.push(object);
+  }
+  groupedData.sort(function(a, b){
+    let c = new Date(a.date);
+    let d = new Date(b.date);
+    return c-d;
+  });
+  return groupedData;
 }
 
 chooseMapBackground();
