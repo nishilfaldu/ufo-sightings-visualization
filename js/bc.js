@@ -3,13 +3,13 @@ class BC {
       const { 
         data, 
         element, 
-        width = 960, 
+        width = 500, 
         height = 500, 
         margin = { top: 20, right: 20, bottom: 60, left: 50 },
         binSize = 100 
       } = opts;
   
-      this.data = data;
+      this.data = data.map(d => +d.encounter_length);
       this.element = element;
       this.width = width - margin.left - margin.right;
       this.height = height - margin.top - margin.bottom;
