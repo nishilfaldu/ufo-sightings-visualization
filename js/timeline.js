@@ -255,6 +255,10 @@ class Timeline {
         vis.xScaleContext
       );
 
+      const dStart = (new Date(selectedDomain[0]).getMonth() + 1).toString() + "/" + new Date(selectedDomain[0]).getDate().toString() + "/" + new Date(selectedDomain[0]).getFullYear()
+      const dEnd = (new Date(selectedDomain[1]).getMonth() + 1).toString() + "/" + new Date(selectedDomain[1]).getDate().toString() + "/" + new Date(selectedDomain[1]).getFullYear()
+        console.log(dStart, "dStart", dEnd, "dEnd")
+
       // Update x-scale of the focus view accordingly
       vis.xScaleFocus.domain(selectedDomain);
     } else {
