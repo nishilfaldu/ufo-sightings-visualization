@@ -14,6 +14,16 @@
     <div id="color-by">Color By</div>
     <div id="my-map"></div>
     <div style="display: flex; flex-direction: column">
+      <div class="container">
+        <input
+          id="searchbar"
+          onkeyup="search_data()"
+          type="text"
+          name="search"
+          placeholder="Search data..."
+        />
+        <div id="search-frequency"></div>
+      </div>
       <div>
         <select id="first-dropdown">
           <option value="date_time">Year</option>
@@ -35,7 +45,7 @@
         </select>
       </div>
       <svg id="annual-cycle-histogram" height="250"></svg>
-      <svg id="timeline"></svg><br>
+      <svg id="timeline"></svg><br />
       <h4>Frequency of Encounter Length</h4>
       <div id="bc"></div>
     </div>
@@ -48,9 +58,38 @@
     <script src="js/tod.js"></script>
     <script src="js/timeline.js"></script>
     <script src="js/cycleHistogram.js"></script>
-    <script src = "js/histogram.js"></script>
+    <script src="js/histogram.js"></script>
     <script src="js/bc.js"></script>
+    <script>
+      function search_data() {
+        let input = document.getElementById("searchbar").value.toLowerCase();
+        let sum_count = 0;
 
+        d3.csv("data/ufo_sightings.csv").then((data) => {
+          data.forEach((d) => {
+            if (input != "") {
+              if (d.description.toLowerCase().match(input)) {
+                sum_count += d.description.toLowerCase().match(input).length;
+              }
+            }
+          });
+          if (document.getElementById("searchbar").value != "") {
+            document.getElementById("search-frequency").innerHTML =
+              "The phrase: '" +
+              document.getElementById("searchbar").value +
+              "' appears in " +
+              sum_count +
+              " report";
+            if (sum_count > 1) {
+              document.getElementById("search-frequency").innerHTML =
+                document.getElementById("search-frequency").innerHTML + "s";
+            }
+          } else {
+            document.getElementById("search-frequency").innerHTML = "";
+          }
+        });
+      }
+    </script>
     <div id="tooltip"></div>
   </body>
 </html>

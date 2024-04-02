@@ -96,13 +96,16 @@ d3.csv("data/ufo_sightings.csv")
         filteredData
       );
 
-      const tod = new TimeOfDayBarChart({ parentElement: "#tod" }, filteredData);
+      const tod = new TimeOfDayBarChart(
+        { parentElement: "#tod" },
+        filteredData
+      );
 
       const bc = new BC({
         data: filteredData,
         element: "#bc", // The selector for the container to hold the bar chart
       });
-    })
+    });
 
     // Process each data point
     data.forEach((d) => {
@@ -522,3 +525,24 @@ function extractUniqueYears(data) {
 chooseMapBackground();
 colorByFeature();
 colorByCategories();
+
+// function search_data() {
+//   let input = document.getElementById("searchbar").value.toLowerCase();
+//   let sum_count = 0;
+
+//   d3.csv("data/ufo_sightings.csv").then((data) => {
+//     data.forEach((d) => {
+//       if (input != "") {
+//         if (d.description.toLowerCase().match(input)) {
+//           sum_count += d.description.toLowerCase().match(input).length;
+//         }
+//       }
+//     });
+//     document.getElementById("search-frequency").innerHTML =
+//       "The phrase: '" +
+//       document.getElementById("searchbar").value +
+//       "' appears in " +
+//       sum_count +
+//       " reports";
+//   });
+// }
