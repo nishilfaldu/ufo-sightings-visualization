@@ -12,8 +12,8 @@ class Barchart {
       this.config = {
         parentElement: _config.parentElement,
         colorScale: _config.colorScale,
-        containerWidth: _config.containerWidth || 1000,
-        containerHeight: _config.containerHeight || 400,
+        containerWidth: _config.containerWidth || 800,
+        containerHeight: _config.containerHeight || 240,
         margin: _config.margin || {top: 25, right: 20, bottom: 50, left: 50},
       }
       this.data = _data;

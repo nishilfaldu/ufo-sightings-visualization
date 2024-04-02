@@ -3,10 +3,10 @@ class BC {
       const { 
         data, 
         element, 
-        width = 500, 
-        height = 500, 
+        width = 800, 
+        height = 240, 
         margin = { top: 20, right: 20, bottom: 60, left: 50 },
-        binSize = 100 
+        binSize = 20 
       } = opts;
   
       this.data = data.map(d => +d.encounter_length);

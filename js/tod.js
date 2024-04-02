@@ -7,16 +7,17 @@ class TimeOfDayBarChart {
      * @param {Array}
      */
     constructor(_config, _data) {
+      console.log(_data, "data in tod");
       // Configuration object with defaults
       this.config = {
         parentElement: _config.parentElement,
         colorScale: _config.colorScale,
-        containerWidth: _config.containerWidth || 1000,
-        containerHeight: _config.containerHeight || 400,
+        containerWidth: _config.containerWidth || 800,
+        containerHeight: _config.containerHeight || 240,
         margin: _config.margin || {top: 25, right: 20, bottom: 50, left: 50},
       }
       this.data = _data;
-      this.colorScale = colorScaleForShapes_; 
+      this.colorScale = colorScaleForShapes_;
 
       this.tooltip = d3
       .select('body')

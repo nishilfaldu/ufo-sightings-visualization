@@ -96,7 +96,7 @@ d3.csv("data/ufo_sightings.csv")
         filteredData
       );
 
-      const timelineData = filteredData.rollups(filteredData, v => v.length, d => new Date(d.date_time).getDate());
+      const timelineData = d3.rollups(filteredData, v => v.length, d => new Date(d.date_time).getDate());
       console.log(timelineData, "timelineData");
 
       const tod = new TimeOfDayBarChart({ parentElement: "#tod" }, filteredData);
@@ -106,6 +106,16 @@ d3.csv("data/ufo_sightings.csv")
         element: "#bc", // The selector for the container to hold the bar chart
       });
 
+
+      // const timelineDataForCycleHist = d3.rollups(
+      //   data, v => v.length, d => (new Date(d.date_time).getMonth() + 1).toString() + "/" + new Date(d.date_time).getDate().toString() + "/" + new Date(d.date_time).getFullYear()
+      //   ).map(([key, value]) => ({ date: parseTime2(key), close: value }));
+      //   console.log(timelineDataForCycleHist, "timelineData");
+  
+      //   let cycleHistogram = new CycleHistogram(
+      //     { parentElement: "#annual-cycle-histogram" },
+      //     timelineDataForCycleHist
+      //   );
 
     })
 
@@ -156,8 +166,8 @@ d3.csv("data/ufo_sightings.csv")
     const bc = new BC({
       data: filteredData,
       element: "#bc", // The selector for the container to hold the bar chart
-      width: 1790,
-      height: 1200,
+      // width: 1790,
+      // height: 1200,
     });
 
     const timelineData = d3.rollups(
