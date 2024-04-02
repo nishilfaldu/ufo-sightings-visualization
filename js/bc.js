@@ -123,7 +123,7 @@ this.yAxis = this.svg.append('g')
     .attr('fill', (d, i) => this.colorScale(i)) 
     .on('mouseover', (event, d) => {
       this.tooltip
-        .text(`Encounter Length (in thousands): ${d.label}, Frequency (in thousands): ${d.value}`)
+        .html(`<strong>Encounter Length (in thousands): </strong>${d.label} <br><strong>Frequency (in thousands): </strong>${d.value}`)
         .style('visibility', 'visible');
     })
     .on('mousemove', event => {
