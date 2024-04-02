@@ -4,7 +4,9 @@ class Timeline {
    * @param {Object}
    * @param {Array}
    */
-  constructor(_config, _data, _actualData) {
+  constructor(_config, _data, _actualData, 
+   //_dataStore
+    ) {
     this.config = {
       parentElement: _config.parentElement,
       width: 800,
@@ -16,6 +18,7 @@ class Timeline {
     this.data = _data;
     this.monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     this.actualData = _actualData;
+    //this.dataStore = _dataStore; 
     this.initVis();
   }
 
@@ -278,17 +281,17 @@ class Timeline {
         return date >= dStartDate && date <= dEndDate
       })
 
-      console.log(filteredData, "filteredData")
-
-      // Update x-scale of the focus view accordingly
+      console.log(filteredData, "filteredData");
+      //this.dataStore.updateData(filteredData);
       vis.xScaleFocus.domain(selectedDomain);
+
     } else {
-      // Reset x-scale of the focus view (full time period)
       vis.xScaleFocus.domain(vis.xScaleContext.domain());
     }
 
     // Redraw line and update x-axis labels in focus view
     vis.focusLinePath.attr("d", vis.line);
     vis.xAxisFocusG.call(vis.xAxisFocus);
+
   }
 }

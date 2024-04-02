@@ -25,7 +25,6 @@ class CycleHistogram{
             .text('a simple tooltip');
 
         d3.selectAll("#annual-cycle-dropdown").on("change", (event) => this.updateVis());
-
         this.initVis();
       }
 

@@ -1,3 +1,6 @@
+// import { CentralDataStore } from "./CentralDataStore.js";
+// const dataStore = new CentralDataStore(); 
+
 var parseTime = d3.timeParse("%m/%d/%Y %H:%M");
 var date_array = {};
 let ufo_frequency = "date,close\n";
@@ -9,7 +12,7 @@ const parseTime2 = d3.timeParse("%m/%d/%Y");
 
 function sortByDates(dates) {
   let keys = Object.keys(dates);
-  console.log("keys: ", keys);
+  // console.log("keys: ", keys);
   keys.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   let r = [];
@@ -49,8 +52,8 @@ let uniqueShapes = new Array();
 
 d3.csv("data/ufo_sightings.csv")
   .then((data) => {
-    console.log(data);
-    console.log(data.length);
+    // console.log(data);
+    // console.log(data.length);
 
     let notMappedCount = 0;
     const years = new Set();
@@ -66,13 +69,13 @@ d3.csv("data/ufo_sightings.csv")
       ufo_shape: [...new Set(data.map((d) => d.ufo_shape))],
     };
 
-    console.log(secondDropdownOptions, "secondDropdownOptions");
+    // console.log(secondDropdownOptions, "secondDropdownOptions");
 
     // Attach event listener to the first dropdown
     const firstDropdown = document.getElementById("first-dropdown");
     firstDropdown.addEventListener("change", function (event) {
       const selectedOption = event.target.value;
-      console.log(selectedOption);
+      // console.log(selectedOption);
       populateSecondDropdown(selectedOption, secondDropdownOptions);
     });
 
@@ -83,6 +86,7 @@ d3.csv("data/ufo_sightings.csv")
       d3.select("#barchart").selectAll("*").remove();
       d3.select("#bc").selectAll("*").remove();
       d3.select("#tod").selectAll("*").remove();
+      // d3.select("#annual-cycle-histogram").selectAll("*").remove(); 
       const selectedOption = firstDropdown.value;
       const selectedValue = event.target.value;
       const filteredData = filterData(
@@ -91,21 +95,29 @@ d3.csv("data/ufo_sightings.csv")
         selectedValue,
         data
       );
+
       const barchart = new Barchart(
         { parentElement: "#barchart" },
-        filteredData
+        filteredData, //dataStore
       );
-
+     
       const timelineData = d3.rollups(filteredData, v => v.length, d => new Date(d.date_time).getDate());
-      console.log(timelineData, "timelineData");
+      // console.log(timelineData, "timelineData");
 
-      const tod = new TimeOfDayBarChart({ parentElement: "#tod" }, filteredData);
+      const tod = new TimeOfDayBarChart({ parentElement: "#tod" }, filteredData, 
+      //dataStore
+      );
 
       const bc = new BC({
         data: filteredData,
         element: "#bc", // The selector for the container to hold the bar chart
+        //dataStore: dataStore
       });
 
+        // const cycleHistogram = new CycleHistogram(
+        //   { parentElement: "#annual-cycle-histogram" },
+        //   filteredData
+        // );
 
       // const timelineDataForCycleHist = d3.rollups(
       //   data, v => v.length, d => (new Date(d.date_time).getMonth() + 1).toString() + "/" + new Date(d.date_time).getDate().toString() + "/" + new Date(d.date_time).getFullYear()
@@ -161,13 +173,18 @@ d3.csv("data/ufo_sightings.csv")
       secondDropdownValue,
       data
     );
-    const barchart = new Barchart({ parentElement: "#barchart" }, filteredData);
-    const tod = new TimeOfDayBarChart({ parentElement: "#tod" }, filteredData);
+    const barchart = new Barchart({ parentElement: "#barchart" }, filteredData, 
+    //dataStore
+    );
+    const tod = new TimeOfDayBarChart({ parentElement: "#tod" }, filteredData, 
+    //dataStore
+    );
     const bc = new BC({
       data: filteredData,
       element: "#bc", // The selector for the container to hold the bar chart
       // width: 1790,
       // height: 1200,
+      //dataStore: dataStore
     });
 
     const timelineData = d3.rollups(
@@ -179,15 +196,17 @@ d3.csv("data/ufo_sightings.csv")
       return c-d;
     });
 
-    console.log(timelineData, "timelineData");
+    // console.log(timelineData, "timelineData");
 
     let cycleHistogram = new CycleHistogram(
       { parentElement: "#annual-cycle-histogram" },
       timelineData
     );
 
-    console.log(data, "data before timeline")
-    const timeline = new Timeline({ parentElement: "#timeline" }, GroupByMonth(timelineData), data);
+  //   // console.log(data, "data before timeline")
+    const timeline = new Timeline({ parentElement: "#timeline" }, GroupByMonth(timelineData), data, 
+   // dataStore
+    );
     // timeline.updateVis();
 
     // Convert sets to arrays for any further use
@@ -444,7 +463,7 @@ function colorByCategories() {
     switch (this.value) {
       case "year":
         uniqueYears.sort((a, b) => a - b);
-        console.log(uniqueYears);
+        // console.log(uniqueYears);
         // const yearsDropdown = createDropdown(uniqueYears, 'years-dropdown');
         // dynamicElement.appendChild(yearsDropdown);
         break;
@@ -457,7 +476,7 @@ function colorByCategories() {
         // dynamicElement.appendChild(slider);
         break;
       case "ufo-shape":
-        console.log(uniqueShapes);
+        // console.log(uniqueShapes);
         // const shapesDropdown = createDropdown(uniqueShapes, 'shapes-dropdown');
         // dynamicElement.appendChild(shapesDropdown);
         break;

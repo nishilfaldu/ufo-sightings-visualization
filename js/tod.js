@@ -6,8 +6,10 @@ class TimeOfDayBarChart {
      * @param {Object}
      * @param {Array}
      */
-    constructor(_config, _data) {
-      console.log(_data, "data in tod");
+    constructor(_config, _data, 
+     // _dataStore
+      ) {
+      // console.log(_data, "data in tod");
       // Configuration object with defaults
       this.config = {
         parentElement: _config.parentElement,
@@ -18,6 +20,8 @@ class TimeOfDayBarChart {
       }
       this.data = _data;
       this.colorScale = colorScaleForShapes_;
+      // this.dataStore = _dataStore; 
+      // this.dataStore.subscribe(this); 
 
       this.tooltip = d3
       .select('body')
@@ -110,7 +114,7 @@ class TimeOfDayBarChart {
         }
       
       })
-      console.log(aggregatedDataMap);
+      // console.log(aggregatedDataMap);
       vis.aggregatedData = Array.from(aggregatedDataMap, ([key, count]) => ({ key, count }));
 
   
@@ -127,6 +131,14 @@ class TimeOfDayBarChart {
       vis.renderVis();
     }
   
+
+    update(data)
+    {
+      let vis = this; 
+      vis.data = data; 
+      vis.updateVis(); 
+    }
+
     /**
      * Bind data to visual elements
      */

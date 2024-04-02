@@ -1,6 +1,6 @@
 export class CentralDataStore {
-  constructor(_attribute) {
-    this.sharedData = [];
+  constructor(_data) {
+    this.sharedData = _data || [];
     this.subscribers = [];
   }
 
@@ -19,7 +19,7 @@ export class CentralDataStore {
 
   notifySubscribers() {
     this.subscribers.forEach(subscriber => {
-      console.log(subscriber, "subscriber");
+      console.log(subscriber, "NOTIFY YOU subscriber");
       subscriber.update(this.sharedData);
     });
   }

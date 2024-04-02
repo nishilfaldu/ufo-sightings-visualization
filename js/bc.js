@@ -6,7 +6,8 @@ class BC {
         width = 650, 
         height = 250, 
         margin = { top: 20, right: 20, bottom: 60, left: 100 },
-        binSize = 20 
+        binSize = 20,
+       // dataStore
       } = opts;
   
       this.data = data.map(d => +d.encounter_length);
@@ -17,6 +18,8 @@ class BC {
       this.binSize = binSize;
       this.binnedData = [];
       this.colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+      // this.dataStore = dataStore; 
+      // this.dataStore.subscribe(this); 
 
       this.tooltip = d3
       .select('body')
@@ -56,74 +59,84 @@ class BC {
       
         this.binnedData.sort((a, b) => parseInt(a.label) - parseInt(b.label));
       }
-      
 
-    init() {
-      this.binData();
-  
-      // SVG setup
-      this.svg = d3.select(this.element)
-        .append('svg')
-        .attr('width', this.width + this.margin.left + this.margin.right)
-        .attr('height', this.height + this.margin.top + this.margin.bottom)
-        .append('g')
-        .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
+init() {
 
+  this.svg = d3.select(this.element)
+    .append('svg')
+    .attr('width', this.width + this.margin.left + this.margin.right)
+    .attr('height', this.height + this.margin.top + this.margin.bottom)
+    .append('g')
+    .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
 
-// Define scales
-this.xScale = d3.scaleBand()
-    .rangeRound([0, this.width])
-    .padding(0.1)
-    .domain(this.binnedData.map(d => d.label));
+  // Define scales - Keep scales definition here if they don't need to be recalculated with new data
+  this.xScale = d3.scaleBand()
+      .rangeRound([0, this.width])
+      .padding(0.1);
 
-this.yScale = d3.scaleLog()
-    .range([this.height, 0])
-    .domain([1, Math.ceil(d3.max(this.binnedData, d => d.value))])
-    .clamp(true);
+  this.yScale = d3.scaleLog()
+      .range([this.height, 0])
+      .clamp(true);
 
-// Append g element for x axis and call x axis
-this.xAxis = this.svg.append('g')
-    .attr('transform', `translate(0,${this.height})`)
-    .call(d3.axisBottom(this.xScale));
+  // Append g element for x axis - Static part
+  this.xAxis = this.svg.append('g')
+      .attr('transform', `translate(0,${this.height})`);
 
-this.xAxis.selectAll("text")
+  // Append g element for y axis - Static part
+  this.yAxis = this.svg.append('g');
+
+  // X-axis title
+  this.svg.append("text")
+    .attr("transform", `translate(${this.width / 2}, ${this.height + this.margin.top + 20})`)
+    .style("text-anchor", "middle")
+    .text("Encounter Length (in thousands)");
+
+  // Y-axis title
+  this.svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - this.margin.left)
+    .attr("x", 0 - (this.height / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Frequency (in thousands)");
+
+  // Call update function to create the dynamic parts
+  this.updateVis(); // Assuming this prepares your data
+}
+
+updateVis() {
+   this.binData(); 
+  // Update domains
+  this.xScale.domain(this.binnedData.map(d => d.label));
+  this.yScale.domain([1, Math.ceil(d3.max(this.binnedData, d => d.value))]);
+
+  // Update axes
+  this.xAxis.call(d3.axisBottom(this.xScale))
+    .selectAll("text")
     .style("text-anchor", "end")
     .attr("dx", "-.8em")
     .attr("dy", ".15em")
     .attr("transform", "rotate(-65)");
 
-// Append g element for y axis and call y axis
-this.yAxis = this.svg.append('g')
-    .call(d3.axisLeft(this.yScale).tickFormat(d3.format("~s"))); // Correct placement of yAxis call
+  this.yAxis.call(d3.axisLeft(this.yScale).tickFormat(d3.format("~s")));
 
-  
-      // X-axis title
-      this.svg.append("text")
-        .attr("transform", `translate(${this.width / 2}, ${this.height + this.margin.top + 20})`)
-        .style("text-anchor", "middle")
-        .text("Encounter Length (in thousands)");
-  
-      // Y-axis title
-      this.svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - this.margin.left)
-        .attr("x", 0 - (this.height / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text("Frequency (in thousands)");
-  
-        this.svg.selectAll('.bar')
-    .data(this.binnedData)
-    .enter().append('rect')
+  // Bind data to bars and update
+  const bars = this.svg.selectAll('.bar')
+    .data(this.binnedData);
+
+  bars.enter().append('rect')
     .attr('class', 'bar')
+    .merge(bars) // Combine enter and update selections
     .attr('x', d => this.xScale(d.label))
     .attr('y', d => this.yScale(d.value))
     .attr('width', this.xScale.bandwidth())
     .attr('height', d => this.height - this.yScale(d.value))
-    .attr('fill', (d, i) => this.colorScale(i)) 
-    .on('mouseover', (event, d) => {
+    .attr('fill', (d, i) => this.colorScale(i));
+
+  // Update events for new and updated bars
+  bars.on('mouseover', (event, d) => {
       this.tooltip
-        .html(`<strong>Encounter Length (in thousands): </strong>${d.label} <br><strong>Frequency (in thousands): </strong>${d.value}`)
+        .html(`<strong>Encounter Length (in thousands): </strong>${d.label}<br><strong>Frequency (in thousands): </strong>${d.value}`)
         .style('visibility', 'visible');
     })
     .on('mousemove', event => {
@@ -135,34 +148,15 @@ this.yAxis = this.svg.append('g')
       this.tooltip.style('visibility', 'hidden');
     });
 
-    }
-  
-  
-    update(newData) {
-        // Update the data
-        this.data = newData;
-        this.binData();
-    
-        // Redraw the bars
-        const bars = this.svg.selectAll('.bar')
-          .data(this.binnedData);
-    
-        bars.exit().remove();
-    
-        // Enter + Update phase
-        bars.enter().append('rect')
-          .attr('class', 'bar')
-          // ... rest of the attribute settings
-          .merge(bars)
-          .transition() // Add a transition for smooth updating
-          .duration(500)
-          .attr('y', d => this.yScale(d.value))
-          .attr('height', d => this.height - this.yScale(d.value))
-          .attr('fill', d => d.color);
-    
-        this.xAxis.transition().duration(500).call(d3.axisBottom(this.xScale));
-        this.yAxis.transition().duration(500).call(d3.axisLeft(this.yScale));
+  // Remove exit selection
+  bars.exit().remove();
+}
 
-      }
-  }
-  
+    update(data)
+    {
+      let vis = this; 
+      vis.data = data; 
+      vis.updateVis(); 
+
+    }
+}
