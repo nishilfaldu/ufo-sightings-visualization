@@ -163,14 +163,20 @@ d3.csv("data/ufo_sightings.csv")
     const timelineData = d3.rollups(
       data, v => v.length, d => (new Date(d.date_time).getMonth() + 1).toString() + "/" + new Date(d.date_time).getDate().toString() + "/" + new Date(d.date_time).getFullYear()
       ).map(([key, value]) => ({ date: parseTime2(key), close: value }));
-      console.log(timelineData, "timelineData");
+    timelineData.sort(function(a, b){
+      let c = new Date(a.date);
+      let d = new Date(b.date);
+      return c-d;
+    });
 
-      let cycleHistogram = new CycleHistogram(
-        { parentElement: "#annual-cycle-histogram" },
-        timelineData
-      );
+    console.log(timelineData, "timelineData");
 
-      console.log(data, "data before timeline")
+    let cycleHistogram = new CycleHistogram(
+      { parentElement: "#annual-cycle-histogram" },
+      timelineData
+    );
+
+    console.log(data, "data before timeline")
     const timeline = new Timeline({ parentElement: "#timeline" }, timelineData, data);
     // timeline.updateVis();
 
