@@ -105,6 +105,8 @@ d3.csv("data/ufo_sightings.csv")
         data: filteredData,
         element: "#bc", // The selector for the container to hold the bar chart
       });
+
+
     })
 
     // Process each data point
@@ -163,6 +165,11 @@ d3.csv("data/ufo_sightings.csv")
       ).map(([key, value]) => ({ date: parseTime2(key), close: value }));
       console.log(timelineData, "timelineData");
 
+      let cycleHistogram = new CycleHistogram(
+        { parentElement: "#annual-cycle-histogram" },
+        timelineData
+      );
+
       console.log(data, "data before timeline")
     const timeline = new Timeline({ parentElement: "#timeline" }, timelineData, data);
     // timeline.updateVis();
@@ -206,19 +213,19 @@ d3.csv("data/ufo_sightings.csv")
     //   })
     //   .catch((error) => console.error(error));
 
-    d3.csv("data/ufo_frequency.csv")
-      .then((data) => {
-        data.forEach((d) => {
-          d.close = parseFloat(d.close); // Convert string to float
-          d.date = parseTime2(d.date);
-        });
+    // d3.csv("data/ufo_frequency.csv")
+    //   .then((data) => {
+    //     data.forEach((d) => {
+    //       d.close = parseFloat(d.close); // Convert string to float
+    //       d.date = parseTime2(d.date);
+    //     });
 
-        let cycleHistogram = new CycleHistogram(
-          { parentElement: "#annual-cycle-histogram" },
-          data
-        );
-      })
-      .catch((error) => console.error(error));
+    //     let cycleHistogram = new CycleHistogram(
+    //       { parentElement: "#annual-cycle-histogram" },
+    //       data
+    //     );
+    //   })
+    //   .catch((error) => console.error(error));
   })
   .catch((error) => console.error(error));
 
