@@ -60,6 +60,14 @@ Several sketches were made to aid in the design process:
 
 ### Discover
 
+This application could allow a user to discover many things. Here are some examples of things users could look for in the application, as well as what conclusions users may draw from them.
+
+- Reported UFO sightings have broadly become more common as time as gone on. This could be because reports are easier to make, or because there are more things in the sky, such as satellites, airplanes, and other phenomena that may be mistaken for UFOs.
+- UFO sightings are more common when people are more likely to be outside, such as on weekends, in the summer, and in afternoons and evenings, when most people are done with work.
+- UFO sightings are the most common in July. This could be due to Independence Day celebrations in the US being mistaken for UFOs.
+  
+There are many more conclusions to draw from these visualizations, which the user can find easily with this application.
+
 ---
 
 ### Process
