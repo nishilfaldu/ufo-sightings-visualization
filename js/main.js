@@ -98,10 +98,21 @@ d3.csv("data/ufo_sightings.csv")
       const tod = new TimeOfDayBarChart({ parentElement: "#tod" }, filteredData);
 
       const bc = new BC({
-        data: encounterLengths,
+        data: filteredData,
         element: "#bc", // The selector for the container to hold the bar chart
-        width: 1790,
-        height: 1200,
+      });
+    const secondDropdown = document.getElementById('second-dropdown');
+    secondDropdown.addEventListener('change', function(event) {
+      d3.select('#barchart').selectAll('*').remove();
+      d3.select("#bc").selectAll("*").remove()
+      const selectedOption = firstDropdown.value;
+      const selectedValue = event.target.value;
+      const filteredData = filterData(secondDropdownOptions, selectedOption, selectedValue, data);
+      const barchart = new Barchart({ parentElement: '#barchart' }, filteredData);
+      
+      const bc = new BC({
+        data: filteredData,
+        element: "#bc", // The selector for the container to hold the bar chart
       });
     });
 
