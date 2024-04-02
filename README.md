@@ -72,6 +72,8 @@ There are many more conclusions to draw from these visualizations, which the use
 
 ### Process
 
+These visualizations were made using the [d3 library](https://d3js.org/) and javascript. Each visualization was given its own d3 class, which were called in the main.js file, found in the js folder at the root level of this repository. All code can be found within [this repository](https://github.com/nishilfaldu/ufo-sightings-visualization). 
+
 ---
 
 ### Demo Video
