@@ -197,35 +197,6 @@ d3.csv("data/ufo_sightings.csv")
     );
 
     setupEventListeners(leafletMap, uniqueYears, uniqueShapes, shapeColors);
-
-    // d3.csv("data/ufo_frequency.csv")
-    //   .then((data) => {
-    //     console.log(data);
-    //     console.log(data.length);
-    //     data.forEach((d) => {
-    //       d.close = parseFloat(d.close); // Convert string to float
-    //       d.date = parseTime2(d.date); // Convert string to date object
-    //     });
-    //     console.log(data, "data in csv")
-    //     // Initialize and render chart
-    //     let timeline = new Timeline({ parentElement: "#timeline" }, data);
-    //     timeline.updateVis();
-    //   })
-    //   .catch((error) => console.error(error));
-
-    // d3.csv("data/ufo_frequency.csv")
-    //   .then((data) => {
-    //     data.forEach((d) => {
-    //       d.close = parseFloat(d.close); // Convert string to float
-    //       d.date = parseTime2(d.date);
-    //     });
-
-    //     let cycleHistogram = new CycleHistogram(
-    //       { parentElement: "#annual-cycle-histogram" },
-    //       data
-    //     );
-    //   })
-    //   .catch((error) => console.error(error));
   })
   .catch((error) => console.error(error));
 
