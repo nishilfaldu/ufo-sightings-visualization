@@ -1,5 +1,5 @@
-// import { CentralDataStore } from "./CentralDataStore.js";
-// const dataStore = new CentralDataStore(); 
+import { CentralDataStore } from "./CentralDataStore.js";
+const dataStore = new CentralDataStore(); 
 
 var parseTime = d3.timeParse("%m/%d/%Y %H:%M");
 var date_array = {};
@@ -36,6 +36,7 @@ function populateSecondDropdown(selectedOption, secondDropdownOptions) {
     secondDropdown.appendChild(optionElement);
   });
 }
+
 
 function convertToCSV(arr) {
   const array = [Object.keys(arr[0])].concat(arr);
@@ -86,7 +87,7 @@ d3.csv("data/ufo_sightings.csv")
       d3.select("#barchart").selectAll("*").remove();
       d3.select("#bc").selectAll("*").remove();
       d3.select("#tod").selectAll("*").remove();
-      // d3.select("#annual-cycle-histogram").selectAll("*").remove(); 
+      d3.select("#annual-cycle-histogram").selectAll("*").remove(); 
       const selectedOption = firstDropdown.value;
       const selectedValue = event.target.value;
       const filteredData = filterData(
@@ -98,36 +99,34 @@ d3.csv("data/ufo_sightings.csv")
 
       const barchart = new Barchart(
         { parentElement: "#barchart" },
-        filteredData, //dataStore
+        filteredData, dataStore
       );
      
       const timelineData = d3.rollups(filteredData, v => v.length, d => new Date(d.date_time).getDate());
       // console.log(timelineData, "timelineData");
 
       const tod = new TimeOfDayBarChart({ parentElement: "#tod" }, filteredData, 
-      //dataStore
+      dataStore
       );
 
       const bc = new BC({
         data: filteredData,
         element: "#bc", // The selector for the container to hold the bar chart
-        //dataStore: dataStore
+        dataStore: dataStore
       });
 
-        // const cycleHistogram = new CycleHistogram(
-        //   { parentElement: "#annual-cycle-histogram" },
-        //   filteredData
-        // );
 
-      // const timelineDataForCycleHist = d3.rollups(
-      //   data, v => v.length, d => (new Date(d.date_time).getMonth() + 1).toString() + "/" + new Date(d.date_time).getDate().toString() + "/" + new Date(d.date_time).getFullYear()
-      //   ).map(([key, value]) => ({ date: parseTime2(key), close: value }));
-      //   console.log(timelineDataForCycleHist, "timelineData");
+
+      const timelineDataForCycleHist = d3.rollups(
+        filteredData, v => v.length, d => (new Date(d.date_time).getMonth() + 1).toString() + "/" + new Date(d.date_time).getDate().toString() + "/" + new Date(d.date_time).getFullYear()
+        ).map(([key, value]) => ({ date: parseTime2(key), close: value }));
+        console.log(timelineDataForCycleHist, "timelineData");
+
+                const cycleHistogram = new CycleHistogram(
+          { parentElement: "#annual-cycle-histogram" },
+          timelineDataForCycleHist
+        );
   
-      //   let cycleHistogram = new CycleHistogram(
-      //     { parentElement: "#annual-cycle-histogram" },
-      //     timelineDataForCycleHist
-      //   );
 
     })
 
@@ -174,17 +173,17 @@ d3.csv("data/ufo_sightings.csv")
       data
     );
     const barchart = new Barchart({ parentElement: "#barchart" }, filteredData, 
-    //dataStore
+    dataStore
     );
     const tod = new TimeOfDayBarChart({ parentElement: "#tod" }, filteredData, 
-    //dataStore
+    dataStore
     );
     const bc = new BC({
       data: filteredData,
       element: "#bc", // The selector for the container to hold the bar chart
       // width: 1790,
       // height: 1200,
-      //dataStore: dataStore
+      dataStore: dataStore
     });
 
     const timelineData = d3.rollups(
@@ -196,18 +195,13 @@ d3.csv("data/ufo_sightings.csv")
       return c-d;
     });
 
-    // console.log(timelineData, "timelineData");
-
     let cycleHistogram = new CycleHistogram(
       { parentElement: "#annual-cycle-histogram" },
       timelineData
     );
-
-  //   // console.log(data, "data before timeline")
     const timeline = new Timeline({ parentElement: "#timeline" }, GroupByMonth(timelineData), data, 
-   // dataStore
+   dataStore
     );
-    // timeline.updateVis();
 
     // Convert sets to arrays for any further use
     uniqueYears = Array.from(years);

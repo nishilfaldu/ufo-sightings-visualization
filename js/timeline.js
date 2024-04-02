@@ -5,7 +5,7 @@ class Timeline {
    * @param {Array}
    */
   constructor(_config, _data, _actualData, 
-   //_dataStore
+   _dataStore
     ) {
     this.config = {
       parentElement: _config.parentElement,
@@ -18,7 +18,9 @@ class Timeline {
     this.data = _data;
     this.monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     this.actualData = _actualData;
-    //this.dataStore = _dataStore; 
+    this.filteredDataMain = _data; 
+    this.dataStore = _dataStore; 
+    // this.dataStore.subscribe(this); 
     this.initVis();
   }
 
@@ -249,49 +251,52 @@ class Timeline {
     return (new Date(date).getMonth() + 1).toString() + "/" + new Date(date).getDate().toString() + "/" + new Date(date).getFullYear()
   }
 
-  /**
-   * React to brush events
-   */
   brushed(selection) {
     console.log(selection, "selection")
     let vis = this;
 
     console.log(vis.actualData, "actualData in brushed 1")
 
-    // Check if the brush is still active or if it has been removed
     if (selection) {
-      // Convert given pixel coordinates (range: [x0,x1]) into a time period (domain: [Date, Date])
-      const selectedDomain = selection.map(
-        vis.xScaleContext.invert,
-        vis.xScaleContext
-      );
+        const selectedDomain = selection.map(vis.xScaleContext.invert, vis.xScaleContext);
+        console.log(selectedDomain, "selectedDomain")
 
-      console.log(selectedDomain, "selectedDomain")
-
-      const dStart = this.processDate(selectedDomain[0])
-      const dEnd = this.processDate(selectedDomain[1])
+        const dStart = vis.processDate(selectedDomain[0]);
+        const dEnd = vis.processDate(selectedDomain[1]);
         console.log(dStart, "dStart", dEnd, "dEnd")
 
-        console.log(vis.actualData, "actualData in brushed")
-      // filter out those entries that are within the selected time period
-      const filteredData = vis.actualData.filter(d => {
-        const date = new Date(this.processDate(d.date_time))
-        const dStartDate = new Date(dStart)
-        const dEndDate = new Date(dEnd)
-        return date >= dStartDate && date <= dEndDate
-      })
+        // Convert only once outside the filter loop for efficiency
+        const dStartDate = new Date(dStart);
+        const dEndDate = new Date(dEnd);
 
-      console.log(filteredData, "filteredData");
-      //this.dataStore.updateData(filteredData);
-      vis.xScaleFocus.domain(selectedDomain);
-
+        console.log(vis.actualData, "actualData in brushed");
+        const filteredData = vis.actualData.filter(d => {
+            const date = new Date(vis.processDate(d.date_time));
+            return date >= dStartDate && date <= dEndDate;
+        });
+        console.log(filteredData, "filteredData");
+        if (filteredData.length === 0) { //TODO: Can someone take a look at this part
+          vis.dataStore.updateData(vis.actualData);
+      } 
+      else {
+        vis.dataStore.updateData(filteredData);
+        vis.xScaleFocus.domain([dStartDate, dEndDate]); // Directly use Date objects
+      }
     } else {
-      vis.xScaleFocus.domain(vis.xScaleContext.domain());
+        vis.xScaleFocus.domain(vis.xScaleContext.domain());
     }
 
     // Redraw line and update x-axis labels in focus view
     vis.focusLinePath.attr("d", vis.line);
     vis.xAxisFocusG.call(vis.xAxisFocus);
+}
 
+
+  update(data)
+  {
+    let vis = this;
+    vis.data = data; 
+    vis.updateVis(); 
   }
+
 }

@@ -7,7 +7,7 @@ class TimeOfDayBarChart {
      * @param {Array}
      */
     constructor(_config, _data, 
-     // _dataStore
+     _dataStore
       ) {
       // console.log(_data, "data in tod");
       // Configuration object with defaults
@@ -20,8 +20,8 @@ class TimeOfDayBarChart {
       }
       this.data = _data;
       this.colorScale = colorScaleForShapes_;
-      // this.dataStore = _dataStore; 
-      // this.dataStore.subscribe(this); 
+      this.dataStore = _dataStore; 
+      this.dataStore.subscribe(this); 
 
       this.tooltip = d3
       .select('body')

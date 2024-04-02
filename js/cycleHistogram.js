@@ -68,37 +68,42 @@ class CycleHistogram{
         let vis = this;
 
         vis.binSelect = d3.selectAll("#annual-cycle-dropdown")._groups[0][0].value;
+        console.log("vis.binSelect: ", vis.binSelect); 
 
         vis.binnedData = [];
 
         switch(this.binSelect){
             case 'month':
-                vis.xAxis.tickFormat((d, i) => vis.monthNames[i]);
-                vis.xScale.domain(vis.BuildAscendingArray(12));
-                vis.binnedData = Array.apply(null, Array(12)).map(() => 0);
-                for(let i = 0; i < vis.data.length; i++){
-                    vis.binnedData[vis.data[i].date.getMonth()] += vis.data[i].close;
-                }
-                break;
+              vis.xAxis.tickFormat((d, i) => vis.monthNames[i]);
+              vis.xScale.domain(vis.BuildAscendingArray(12));
+              vis.binnedData = Array.apply(null, Array(12)).map(() => 0);
+              for(let i = 0; i < vis.data.length; i++){
+                const date = new Date(vis.data[i].date);  
+                vis.binnedData[date.getMonth()] += vis.data[i].close;
+              }
+              break;
             case 'day':
-                vis.xAxis.tickFormat((d, i) => vis.weekDayNames[i]);
-                vis.xScale.domain(vis.BuildAscendingArray(7));
-                vis.binnedData = Array.apply(null, Array(7)).map(() => 0);
-                for(let i = 0; i < vis.data.length; i++){
-                    vis.binnedData[vis.data[i].date.getDay()] += vis.data[i].close;
-                }
-                break;
+              vis.xAxis.tickFormat((d, i) => vis.weekDayNames[i]);
+              vis.xScale.domain(vis.BuildAscendingArray(7));
+              vis.binnedData = Array.apply(null, Array(7)).map(() => 0);
+              for(let i = 0; i < vis.data.length; i++){
+                const date = new Date(vis.data[i].date);
+                vis.binnedData[date.getDay()] += vis.data[i].close;
+              }
+              break;
             case 'season':
-                vis.xAxis.tickFormat((d, i) => vis.seasonNames[i]);
-                vis.xScale.domain(vis.BuildAscendingArray(4));
-                vis.binnedData = Array.apply(null, Array(4)).map(() => 0);
-                for(let i = 0; i < vis.data.length; i++){
-                    vis.binnedData[vis.GetSeason(vis.data[i].date)] += vis.data[i].close;
-                }
-                break;
+              vis.xAxis.tickFormat((d, i) => vis.seasonNames[i]);
+              vis.xScale.domain(vis.BuildAscendingArray(4));
+              vis.binnedData = Array.apply(null, Array(4)).map(() => 0);
+              for(let i = 0; i < vis.data.length; i++){
+                const date = new Date(vis.data[i].date);
+                vis.binnedData[vis.GetSeason(date)] += vis.data[i].close;
+              }
+              break;
             default:
-                break;
-        }
+              break;
+          }
+          
 
         vis.yScale.domain([0, d3.max(vis.binnedData)]);
 

@@ -19,7 +19,7 @@ export class CentralDataStore {
 
   notifySubscribers() {
     this.subscribers.forEach(subscriber => {
-      console.log(subscriber, "NOTIFY YOU subscriber");
+      console.log(subscriber);
       subscriber.update(this.sharedData);
     });
   }

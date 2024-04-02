@@ -8,7 +8,7 @@ class Barchart {
      * @param {Array}
      */
     constructor(_config, _data, 
-    // _dataStore
+    _dataStore
       ) {
       // Configuration object with defaults
       this.config = {
@@ -20,8 +20,8 @@ class Barchart {
       }
       this.data = _data;
       this.colorScale = colorScaleForShapes; 
-      // this.dataStore = _dataStore; 
-      // this.dataStore.subscribe(this); 
+      this.dataStore = _dataStore; 
+      this.dataStore.subscribe(this); 
 
       this.tooltip = d3
       .select('body')
