@@ -52,7 +52,17 @@ class LeafletMap {
       this.data = _data;
       this.shapeColors = _shapeColors; 
       this.baseLayer = null;
+
+      // Initialize the L.AreaSelect object
+      this.areaSelect = L.areaSelect({
+        width: 200, // Set the initial width of the selection area
+        height: 250, // Set the initial height of the selection area
+        // Additional options...
+    });
+
       this.initVis();
+
+
     }
     
       /**
@@ -99,10 +109,13 @@ class LeafletMap {
 
     vis.theMap = L.map('my-map', {
       center: [30, 0],
-      zoom: 2,
+      zoom: 1,
       layers: [vis.base_layer]
     });
 
+  vis.areaSelect.addTo(vis.theMap);
+
+    console.log(this.areaSelect, "vis.areaSelect")
     
     //if you stopped here, you would just have a map
 
@@ -176,6 +189,18 @@ class LeafletMap {
     });
     vis.colorByPoints('year');
     vis.drawLegend('year');
+
+
+    // Read the bounding box
+    var bounds = vis.areaSelect.getBounds();
+    
+    // Get a callback when the bounds change
+    vis.areaSelect.on("change", function() {
+        console.log("Bounds:", this.getBounds());
+    });
+
+
+  vis.areaSelect.setDimensions({width: 500, height: 500})
 
   }
 

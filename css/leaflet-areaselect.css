@@ -2,6 +2,7 @@
     position: absolute;
     background: rgba(0,0,0, 0.4);
     cursor: inherit;
+    /* z-index: 1000; */
 }
 .leaflet-areaselect-handle {
     position: absolute;
@@ -13,4 +14,5 @@
     width: 14px;
     height: 14px;
     cursor: move;
+    /* z-index: 1000; */
 }
