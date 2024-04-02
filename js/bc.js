@@ -3,9 +3,9 @@ class BC {
       const { 
         data, 
         element, 
-        width = 800, 
-        height = 240, 
-        margin = { top: 20, right: 20, bottom: 60, left: 50 },
+        width = 650, 
+        height = 250, 
+        margin = { top: 20, right: 20, bottom: 60, left: 100 },
         binSize = 20 
       } = opts;
   

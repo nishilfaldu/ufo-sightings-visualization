@@ -2,9 +2,9 @@ class CycleHistogram{
     constructor(_config, _data) {
         this.config = {
           parentElement: _config.parentElement,
-          width: 800,
-          height: 240,
-          margin: { top: 10, right: 50, bottom: 100, left: 45 },
+          width: 650,
+          height: 250,
+          margin: { top: 10, right: 50, bottom: 100, left: 100 },
         };
         this.data = _data;
         this.monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

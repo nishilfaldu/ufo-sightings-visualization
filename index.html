@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/output.css" >
   </head>
-  <body>
+  <body style="background-image: url(./ufo.png); background-size: 300px 200px;">
+  </body>>
     <h1 class="text-4xl font-medium text-center m-3">Interactive Map of UFO Sightings</h1>
     <h3 id="sightings-not-mapped" class="text-lg font-semibold text-center"></h3>
     <!-- <div id="color-by-options"></div> -->
@@ -37,7 +38,8 @@
 
     <!-- annual-cycle histogram -->
     <div class="flex flex-col gap-y-2">
-        <select id="annual-cycle-dropdown" class="border-[1px] border-black w-[200px]">
+      <h4  style = "margin-left: 60px">Number of UFO Sightings  </h4>
+        <select id="annual-cycle-dropdown" class="border-[1px] border-black w-[200px]" style = "margin-left: 60px">
           <option value="month">By Month</option>
           <option value="day">By Day of the Week</option>
           <option value="season">By Season</option>
@@ -47,11 +49,13 @@
       
     <!-- barchart -->
       <div>
+        <h4>Number of UFO Sightings by UFO Shape </h4>
         <svg id="barchart"></svg>
       </div>
 
       <!-- time of day barchart -->
       <div>
+        <h4 style = "margin-left: 60px">Number of UFO Sightings by Time of Day </h4>
         <svg id="tod"></svg>
       </div>
 
