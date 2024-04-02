@@ -5,10 +5,19 @@
     <link rel="icon" href="data:;base64,iVBORwOKGO=" />
     <link rel="stylesheet" href="css/leaflet.css" />
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/leaflet-areaselect.css" />
   </head>
   <body>
     <h1>Interactive Map of UFO Sightings</h1>
     <h3 id="sightings-not-mapped"></h3>
+
+    <!-- toggle for brushing in leaflet map -->
+    <h4>Toggle for leaflet map brushing</h4>
+    <label class="switch">
+      <input id="brushCheckbox" type="checkbox">
+      <span class="slider round"></span>
+    </label>
+
     <!-- <div id="color-by-options"></div> -->
     <div id="map-background-options"></div>
     <div id="color-by">Color By</div>
@@ -43,12 +52,13 @@
     <script src="js/d3.v6.min.js"></script>
     <script type="module" src="js/main.js"></script>
     <script src="js/leaflet.js"></script>
-    <script src="js/leafletMap.js"></script>
     <script src="js/barchart.js"></script>
     <script src="js/tod.js"></script>
     <script src="js/timeline.js"></script>
     <script src="js/cycleHistogram.js"></script>
     <script src = "js/histogram.js"></script>
+    <script src="js/leaflet-areaselect.js"></script>
+    <script src="js/leafletMap.js"></script>
     <script src="js/bc.js"></script>
 
     <div id="tooltip"></div>

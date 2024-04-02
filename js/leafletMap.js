@@ -52,7 +52,16 @@ class LeafletMap {
       this.data = _data;
       this.shapeColors = _shapeColors; 
       this.baseLayer = null;
+
+      // Initialize the L.AreaSelect object
+    //   this.areaSelect = L.areaSelect({
+    //     width: 200, // Set the initial width of the selection area
+    //     height: 200, // Set the initial height of the selection area
+    //     // Additional options...
+    // });
       this.initVis();
+
+
     }
     
       /**
@@ -99,10 +108,13 @@ class LeafletMap {
 
     vis.theMap = L.map('my-map', {
       center: [30, 0],
-      zoom: 2,
+      zoom: 1,
       layers: [vis.base_layer]
     });
 
+  // vis.areaSelect.addTo(vis.theMap);
+
+    // console.log(this.areaSelect, "vis.areaSelect")
     
     //if you stopped here, you would just have a map
 
@@ -176,6 +188,54 @@ class LeafletMap {
     });
     vis.colorByPoints('year');
     vis.drawLegend('year');
+
+
+    // Read the bounding box
+    // var bounds = vis.areaSelect.getBounds();
+    
+   
+
+    // Get the checkbox element
+const switchInput = document.getElementById('brushCheckbox');
+
+switchInput.addEventListener('change', () => {
+  if(switchInput.checked) {
+    console.log("hello")
+    vis.areaSelect = L.areaSelect({
+      width: 200, // Set the initial width of the selection area
+      height: 200, //
+    });
+    vis.areaSelect.addTo(vis.theMap);
+    vis.areaSelect.setDimensions({width: 200, height: 200})
+
+      // Get a callback when the bounds change
+  vis.areaSelect.on("change", function() {
+    console.log("Bounds:", this.getBounds());
+
+    // Get the bounds of the selection area
+    const bounds = this.getBounds();
+    const northEast = bounds._northEast
+    const southWest = bounds._southWest
+
+    // Filter the data based on the bounding box
+    const filteredData = vis.data.filter(d => {
+      return d.latitude >= southWest.lat &&
+             d.latitude <= northEast.lat &&
+             d.longitude >= southWest.lng &&
+             d.longitude <= northEast.lng;
+  });
+
+  console.log("Filtered data:", filteredData);
+
+  });
+  } else {
+    vis.areaSelect.remove()
+  }
+});
+
+ 
+
+  
 
   }
 
