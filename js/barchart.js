@@ -7,17 +7,21 @@ class Barchart {
      * @param {Object}
      * @param {Array}
      */
-    constructor(_config, _data) {
+    constructor(_config, _data, 
+    _dataStore
+      ) {
       // Configuration object with defaults
       this.config = {
         parentElement: _config.parentElement,
         colorScale: _config.colorScale,
-        containerWidth: _config.containerWidth || 1000,
-        containerHeight: _config.containerHeight || 400,
-        margin: _config.margin || {top: 25, right: 20, bottom: 50, left: 50},
+        containerWidth: _config.containerWidth || 650,
+        containerHeight: _config.containerHeight || 250,
+        margin: _config.margin || {top: 25, right: 20, bottom: 50, left: 100},
       }
       this.data = _data;
       this.colorScale = colorScaleForShapes; 
+      this.dataStore = _dataStore; 
+      this.dataStore.subscribe(this); 
 
       this.tooltip = d3
       .select('body')
@@ -32,7 +36,7 @@ class Barchart {
       .style('color', '#fff')
       .text('a simple tooltip');
       
-      this.initVis();
+      this.initVis(); 
     }
     
     /**
@@ -86,9 +90,10 @@ class Barchart {
           .attr('x', 0)
           .attr('y', 0)
           .attr('dy', '.71em')
-          .text('Number of UFO Sightings by Shape');
+          // .text('Number of UFO Sightings by Shape');
+
+          vis.updateVis(); 
         
-      this.updateVis();
     }
   
     /**
@@ -158,4 +163,11 @@ class Barchart {
       vis.yAxisG.call(vis.yAxis)
   
     }
+
+    update(data) {
+      let vis = this;
+      vis.data = data;
+      vis.updateVis();
+    }
+    
   }

@@ -4,7 +4,9 @@ class Timeline {
    * @param {Object}
    * @param {Array}
    */
-  constructor(_config, _data) {
+  constructor(_config, _data, _actualData, _filterDataMain,
+   _dataStore
+    ) {
     this.config = {
       parentElement: _config.parentElement,
       width: 800,
@@ -15,6 +17,9 @@ class Timeline {
     };
     this.data = _data;
     this.monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    this.actualData = _actualData;
+    this.filterDataMain = _filterDataMain; 
+    this.dataStore = _dataStore; 
 
     this.initVis();
   }
@@ -144,6 +149,8 @@ class Timeline {
       .attr("x", 90)
       .attr("transform", "rotate(-90)")
       .text("UFO Sightings");
+
+      vis.updateVis();
   }
 
   /**
@@ -168,8 +175,10 @@ class Timeline {
       .y0(vis.config.contextHeight);
 
     // Set the scale input domains
+    // line chart
     vis.xScaleFocus.domain(d3.extent(vis.data, vis.xValue));
     vis.yScaleFocus.domain(d3.extent(vis.data, vis.yValue));
+    // area chart
     vis.xScaleContext.domain(vis.xScaleFocus.domain());
     vis.yScaleContext.domain(vis.yScaleFocus.domain());
 
@@ -238,29 +247,50 @@ class Timeline {
     vis.brushG.call(vis.brush).call(vis.brush.move, defaultBrushSelection);
   }
 
-  /**
-   * React to brush events
-   */
+  processDate(date) {
+    return (new Date(date).getMonth() + 1).toString() + "/" + new Date(date).getDate().toString() + "/" + new Date(date).getFullYear()
+  }
+
   brushed(selection) {
+    console.log(selection, "selection")
     let vis = this;
 
-    // Check if the brush is still active or if it has been removed
-    if (selection) {
-      // Convert given pixel coordinates (range: [x0,x1]) into a time period (domain: [Date, Date])
-      const selectedDomain = selection.map(
-        vis.xScaleContext.invert,
-        vis.xScaleContext
-      );
+    console.log(vis.actualData, "actualData in brushed 1")
 
-      // Update x-scale of the focus view accordingly
-      vis.xScaleFocus.domain(selectedDomain);
+    if (selection) {
+        const selectedDomain = selection.map(vis.xScaleContext.invert, vis.xScaleContext);
+        console.log(selectedDomain, "selectedDomain")
+
+        const dStart = vis.processDate(selectedDomain[0]);
+        const dEnd = vis.processDate(selectedDomain[1]);
+        console.log(dStart, "dStart", dEnd, "dEnd")
+
+        // Convert only once outside the filter loop for efficiency
+        const dStartDate = new Date(dStart);
+        const dEndDate = new Date(dEnd);
+
+        console.log(vis.actualData, "actualData in brushed");
+        const filteredData = vis.actualData.filter(d => {
+            const date = new Date(vis.processDate(d.date_time));
+            return date >= dStartDate && date <= dEndDate;
+        });
+        console.log(filteredData, "filteredData");
+        console.log("this.filterDataMain", this.filterDataMain); 
+
+        if (filteredData.length === 0) { 
+          vis.dataStore.updateData(this.filterDataMain);
+      } 
+      else {
+        vis.dataStore.updateData(filteredData);
+        vis.xScaleFocus.domain([dStartDate, dEndDate]); // Directly use Date objects
+      }
     } else {
-      // Reset x-scale of the focus view (full time period)
-      vis.xScaleFocus.domain(vis.xScaleContext.domain());
+        vis.xScaleFocus.domain(vis.xScaleContext.domain());
     }
 
     // Redraw line and update x-axis labels in focus view
     vis.focusLinePath.attr("d", vis.line);
     vis.xAxisFocusG.call(vis.xAxisFocus);
-  }
+}
+
 }

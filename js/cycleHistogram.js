@@ -1,15 +1,20 @@
+const p2 = d3.timeParse("%m/%d/%Y");
+
+
 class CycleHistogram{
-    constructor(_config, _data) {
+    constructor(_config, _data, _dataStore) {
         this.config = {
           parentElement: _config.parentElement,
-          width: 800,
-          height: 240,
-          margin: { top: 10, right: 50, bottom: 100, left: 45 },
+          width: 650,
+          height: 250,
+          margin: { top: 10, right: 50, bottom: 100, left: 100 },
         };
         this.data = _data;
         this.monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         this.weekDayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         this.seasonNames = ["Spring", "Summer", "Fall", "Winter"];
+        this.dataStore = _dataStore; 
+        this.dataStore.subscribe(this); 
 
         this.tooltip = d3
             .select('body')
@@ -25,7 +30,6 @@ class CycleHistogram{
             .text('a simple tooltip');
 
         d3.selectAll("#annual-cycle-dropdown").on("change", (event) => this.updateVis());
-
         this.initVis();
       }
 
@@ -74,32 +78,36 @@ class CycleHistogram{
 
         switch(this.binSelect){
             case 'month':
-                vis.xAxis.tickFormat((d, i) => vis.monthNames[i]);
-                vis.xScale.domain(vis.BuildAscendingArray(12));
-                vis.binnedData = Array.apply(null, Array(12)).map(() => 0);
-                for(let i = 0; i < vis.data.length; i++){
-                    vis.binnedData[vis.data[i].date.getMonth()] += vis.data[i].close;
-                }
-                break;
+              vis.xAxis.tickFormat((d, i) => vis.monthNames[i]);
+              vis.xScale.domain(vis.BuildAscendingArray(12));
+              vis.binnedData = Array.apply(null, Array(12)).map(() => 0);
+              for(let i = 0; i < vis.data.length; i++){
+                const date = new Date(vis.data[i].date);  
+                vis.binnedData[date.getMonth()] += vis.data[i].close;
+              }
+              break;
             case 'day':
-                vis.xAxis.tickFormat((d, i) => vis.weekDayNames[i]);
-                vis.xScale.domain(vis.BuildAscendingArray(7));
-                vis.binnedData = Array.apply(null, Array(7)).map(() => 0);
-                for(let i = 0; i < vis.data.length; i++){
-                    vis.binnedData[vis.data[i].date.getDay()] += vis.data[i].close;
-                }
-                break;
+              vis.xAxis.tickFormat((d, i) => vis.weekDayNames[i]);
+              vis.xScale.domain(vis.BuildAscendingArray(7));
+              vis.binnedData = Array.apply(null, Array(7)).map(() => 0);
+              for(let i = 0; i < vis.data.length; i++){
+                const date = new Date(vis.data[i].date);
+                vis.binnedData[date.getDay()] += vis.data[i].close;
+              }
+              break;
             case 'season':
-                vis.xAxis.tickFormat((d, i) => vis.seasonNames[i]);
-                vis.xScale.domain(vis.BuildAscendingArray(4));
-                vis.binnedData = Array.apply(null, Array(4)).map(() => 0);
-                for(let i = 0; i < vis.data.length; i++){
-                    vis.binnedData[vis.GetSeason(vis.data[i].date)] += vis.data[i].close;
-                }
-                break;
+              vis.xAxis.tickFormat((d, i) => vis.seasonNames[i]);
+              vis.xScale.domain(vis.BuildAscendingArray(4));
+              vis.binnedData = Array.apply(null, Array(4)).map(() => 0);
+              for(let i = 0; i < vis.data.length; i++){
+                const date = new Date(vis.data[i].date);
+                vis.binnedData[vis.GetSeason(date)] += vis.data[i].close;
+              }
+              break;
             default:
-                break;
-        }
+              break;
+          }
+          
 
         vis.yScale.domain([0, d3.max(vis.binnedData)]);
 
@@ -162,5 +170,18 @@ class CycleHistogram{
         for(let i = 0; i < n; i++)
             array.push(i);
         return array;
+      }
+
+
+      update(data)
+      {
+        let vis = this; 
+        // vis.data = data; 
+        const timelineDataForCycleHist = d3.rollups(
+            data, v => v.length, d => (new Date(d.date_time).getMonth() + 1).toString() + "/" + new Date(d.date_time).getDate().toString() + "/" + new Date(d.date_time).getFullYear()
+            ).map(([key, value]) => ({ date: p2(key), close: value }));
+        vis.data = timelineDataForCycleHist; 
+
+        vis.updateVis(); 
       }
 }

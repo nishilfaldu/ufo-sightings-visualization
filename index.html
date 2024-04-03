@@ -5,11 +5,33 @@
     <link rel="icon" href="data:;base64,iVBORwOKGO=" />
     <link rel="stylesheet" href="css/leaflet.css" />
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/output.css" >
     <link rel="stylesheet" href="css/leaflet-areaselect.css" />
   </head>
-  <body>
-    <h1>Interactive Map of UFO Sightings</h1>
-    <h3 id="sightings-not-mapped"></h3>
+  <style>
+    .centered-container {
+      justify-content: center; /* Center horizontally */
+  }
+
+    #clear-brush-button {
+      background-color: #4CAF50; /* Green background */
+      border: none; /* Remove borders */
+      color: white; /* White text */
+      padding: 10px 20px; /* Some padding */
+      font-size: 16px; /* Increase font size */
+      margin: 4px 2px; /* Some margin */
+      cursor: pointer; /* Pointer/hand icon */
+      border-radius: 12px; /* Rounded corners */
+      transition: background-color 0.3s; /* Smooth transition for hover effect */
+  }
+
+  #clear-brush-button:hover {
+      background-color: #45a049; /* Darker shade of green */
+  }
+  </style>
+  <body style="background-image: url(./ufo.png); background-size: 900px 600px;">
+    <h1 class="text-4xl font-medium text-center m-3">Interactive Map of UFO Sightings</h1>
+    <h3 id="sightings-not-mapped" class="text-lg font-semibold text-center"></h3>
 
     <!-- toggle for brushing in leaflet map -->
     <h4>Toggle for leaflet map brushing</h4>
@@ -19,34 +41,62 @@
     </label>
 
     <!-- <div id="color-by-options"></div> -->
-    <div id="map-background-options"></div>
-    <div id="color-by">Color By</div>
-    <div id="my-map"></div>
-    <div style="display: flex; flex-direction: column">
-      <div>
-        <select id="first-dropdown">
-          <option value="date_time">Year</option>
-          <option value="city_area">City Area</option>
-          <option value="state">State</option>
-          <option value="country">Country</option>
-          <option value="ufo_shape">UFO Shape</option>
-        </select>
-        <select id="second-dropdown"></select>
-      </div>
-      <!-- <div id="mapId" style="width: 600px; height: 400px;"></div> -->
-      <svg id="barchart"></svg>
-      <svg id="tod"></svg>
-      <div>
-        <select id="annual-cycle-dropdown">
+    <div class="flex flex-row gap-x-4 justify-center m-5">
+      <div id="map-background-options" class="border-[1px] border-black"></div>
+      <div id="color-by" class="border-[1px] border-black">Color By</div>
+    </div>
+    <!-- leaflet map -->
+    <div id="my-map" class="ml-auto mr-auto"></div>
+
+    <div class="flex flex-row justify-center items-center m-5 gap-x-4">
+      <select id="first-dropdown" class="border-[1px] border-black">
+        <option value="date_time">Year</option>
+        <option value="city_area">City Area</option>
+        <option value="state">State</option>
+        <option value="country">Country</option>
+        <option value="ufo_shape">UFO Shape</option>
+      </select>
+      <select id="second-dropdown" class="border-[1px] border-black"></select>
+    </div>
+
+    <div class="grid grid-cols-2 ml-auto mr-auto justify-center items-center">
+    <!-- timeline -->
+    <div class="col-span-2 flex justify-center m-5">
+      <svg id="timeline"></svg> 
+    </div>
+    <div class="col-span-2 flex justify-center m-5">
+      <button id="clear-brush-button">Clear Brushing</button>
+  </div>
+
+    <!-- annual-cycle histogram -->
+    <div class="flex flex-col gap-y-2">
+      <h4  style = "margin-left: 60px">Number of UFO Sightings  </h4>
+        <select id="annual-cycle-dropdown" class="border-[1px] border-black w-[200px]" style = "margin-left: 60px">
           <option value="month">By Month</option>
           <option value="day">By Day of the Week</option>
           <option value="season">By Season</option>
         </select>
-      </div>
       <svg id="annual-cycle-histogram" height="250"></svg>
-      <svg id="timeline"></svg><br>
-      <h4>Frequency of Encounter Length</h4>
-      <div id="bc"></div>
+    </div>
+      
+    <!-- barchart -->
+      <div>
+        <h4>Number of UFO Sightings by UFO Shape </h4>
+        <svg id="barchart"></svg>
+      </div>
+
+      <!-- time of day barchart -->
+      <div>
+        <h4 style = "margin-left: 60px">Number of UFO Sightings by Time of Day </h4>
+        <svg id="tod"></svg>
+      </div>
+
+      <!-- frequency encounter length bar chart -->
+      <div>
+        <h4>Frequency of Encounter Length</h4>
+        <div id="bc"></div>
+      </div>
+
     </div>
 
     <script src="js/d3.v6.min.js"></script>
