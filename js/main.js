@@ -172,6 +172,8 @@ d3.csv("data/ufo_sightings.csv")
       secondDropdownValue,
       data
     );
+
+
     const barchart = new Barchart({ parentElement: "#barchart" }, filteredData, 
     dataStore
     );
@@ -195,6 +197,7 @@ d3.csv("data/ufo_sightings.csv")
       return c-d;
     });
 
+
     let cycleHistogram = new CycleHistogram(
       { parentElement: "#annual-cycle-histogram" },
       timelineData, dataStore
@@ -202,6 +205,15 @@ d3.csv("data/ufo_sightings.csv")
     const timeline = new Timeline({ parentElement: "#timeline" }, GroupByMonth(timelineData), data, filteredData, dataStore
     );
 
+    document.getElementById('clear-brush-button').addEventListener('click', () => {
+      dataStore.updateData(filteredData); 
+
+      if (timeline.brushG && timeline.brush) {
+        timeline.brushG.call(timeline.brush.move, null);
+      }
+    });
+
+    
     // Convert sets to arrays for any further use
     uniqueYears = Array.from(years);
     uniqueShapes = Array.from(shapes);

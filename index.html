@@ -7,7 +7,28 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/output.css" >
   </head>
-  <body style="background-image: url(./ufo.png); background-size: 300px 200px;">
+  <style>
+    .centered-container {
+      justify-content: center; /* Center horizontally */
+  }
+
+    #clear-brush-button {
+      background-color: #4CAF50; /* Green background */
+      border: none; /* Remove borders */
+      color: white; /* White text */
+      padding: 10px 20px; /* Some padding */
+      font-size: 16px; /* Increase font size */
+      margin: 4px 2px; /* Some margin */
+      cursor: pointer; /* Pointer/hand icon */
+      border-radius: 12px; /* Rounded corners */
+      transition: background-color 0.3s; /* Smooth transition for hover effect */
+  }
+
+  #clear-brush-button:hover {
+      background-color: #45a049; /* Darker shade of green */
+  }
+  </style>
+  <body style="background-image: url(./ufo.png); background-size: 900px 600px;">
   </body>
     <h1 class="text-4xl font-medium text-center m-3">Interactive Map of UFO Sightings</h1>
     <h3 id="sightings-not-mapped" class="text-lg font-semibold text-center"></h3>
@@ -33,8 +54,11 @@
     <div class="grid grid-cols-2 ml-auto mr-auto justify-center items-center">
     <!-- timeline -->
     <div class="col-span-2 flex justify-center m-5">
-      <svg id="timeline"></svg>
+      <svg id="timeline"></svg> 
     </div>
+    <div class="col-span-2 flex justify-center m-5">
+      <button id="clear-brush-button">Clear Brushing</button>
+  </div>
 
     <!-- annual-cycle histogram -->
     <div class="flex flex-col gap-y-2">
