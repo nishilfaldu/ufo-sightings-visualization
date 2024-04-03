@@ -89,4 +89,6 @@ The tasks were distributed among the group members as follows:
 - Nishil Faldu: Map, UFO Shape visualization, Brushing and Linking of the Map
 - Athulya Ganesh: Map, Encounter Length visualization, Brushing and Linking
 
+This can also be viewed on our [Trello Board](https://trello.com/b/g2Ja5n4v/data-visualization-project-2).
+
 ---
