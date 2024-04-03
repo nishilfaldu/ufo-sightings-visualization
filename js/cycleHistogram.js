@@ -1,5 +1,8 @@
+const p2 = d3.timeParse("%m/%d/%Y");
+
+
 class CycleHistogram{
-    constructor(_config, _data) {
+    constructor(_config, _data, _dataStore) {
         this.config = {
           parentElement: _config.parentElement,
           width: 650,
@@ -10,6 +13,8 @@ class CycleHistogram{
         this.monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         this.weekDayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         this.seasonNames = ["Spring", "Summer", "Fall", "Winter"];
+        this.dataStore = _dataStore; 
+        this.dataStore.subscribe(this); 
 
         this.tooltip = d3
             .select('body')
@@ -68,7 +73,6 @@ class CycleHistogram{
         let vis = this;
 
         vis.binSelect = d3.selectAll("#annual-cycle-dropdown")._groups[0][0].value;
-        console.log("vis.binSelect: ", vis.binSelect); 
 
         vis.binnedData = [];
 
@@ -166,5 +170,18 @@ class CycleHistogram{
         for(let i = 0; i < n; i++)
             array.push(i);
         return array;
+      }
+
+
+      update(data)
+      {
+        let vis = this; 
+        // vis.data = data; 
+        const timelineDataForCycleHist = d3.rollups(
+            data, v => v.length, d => (new Date(d.date_time).getMonth() + 1).toString() + "/" + new Date(d.date_time).getDate().toString() + "/" + new Date(d.date_time).getFullYear()
+            ).map(([key, value]) => ({ date: p2(key), close: value }));
+        vis.data = timelineDataForCycleHist; 
+
+        vis.updateVis(); 
       }
 }

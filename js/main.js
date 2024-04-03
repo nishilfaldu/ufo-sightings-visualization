@@ -124,7 +124,7 @@ d3.csv("data/ufo_sightings.csv")
 
                 const cycleHistogram = new CycleHistogram(
           { parentElement: "#annual-cycle-histogram" },
-          timelineDataForCycleHist
+          timelineDataForCycleHist, dataStore
         );
   
 
@@ -197,10 +197,9 @@ d3.csv("data/ufo_sightings.csv")
 
     let cycleHistogram = new CycleHistogram(
       { parentElement: "#annual-cycle-histogram" },
-      timelineData
+      timelineData, dataStore
     );
-    const timeline = new Timeline({ parentElement: "#timeline" }, GroupByMonth(timelineData), data, 
-   dataStore
+    const timeline = new Timeline({ parentElement: "#timeline" }, GroupByMonth(timelineData), data, filteredData, dataStore
     );
 
     // Convert sets to arrays for any further use

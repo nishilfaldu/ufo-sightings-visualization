@@ -4,7 +4,7 @@ class Timeline {
    * @param {Object}
    * @param {Array}
    */
-  constructor(_config, _data, _actualData, 
+  constructor(_config, _data, _actualData, _filterDataMain,
    _dataStore
     ) {
     this.config = {
@@ -18,9 +18,9 @@ class Timeline {
     this.data = _data;
     this.monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     this.actualData = _actualData;
-    this.filteredDataMain = _data; 
+    this.filterDataMain = _filterDataMain; 
     this.dataStore = _dataStore; 
-    // this.dataStore.subscribe(this); 
+
     this.initVis();
   }
 
@@ -275,8 +275,10 @@ class Timeline {
             return date >= dStartDate && date <= dEndDate;
         });
         console.log(filteredData, "filteredData");
-        if (filteredData.length === 0) { //TODO: Can someone take a look at this part
-          vis.dataStore.updateData(vis.actualData);
+        console.log("this.filterDataMain", this.filterDataMain); 
+
+        if (filteredData.length === 0) { 
+          vis.dataStore.updateData(this.filterDataMain);
       } 
       else {
         vis.dataStore.updateData(filteredData);
@@ -290,13 +292,5 @@ class Timeline {
     vis.focusLinePath.attr("d", vis.line);
     vis.xAxisFocusG.call(vis.xAxisFocus);
 }
-
-
-  update(data)
-  {
-    let vis = this;
-    vis.data = data; 
-    vis.updateVis(); 
-  }
 
 }
