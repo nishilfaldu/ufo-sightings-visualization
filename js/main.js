@@ -120,7 +120,7 @@ d3.csv("data/ufo_sightings.csv")
       const timelineDataForCycleHist = d3.rollups(
         filteredData, v => v.length, d => (new Date(d.date_time).getMonth() + 1).toString() + "/" + new Date(d.date_time).getDate().toString() + "/" + new Date(d.date_time).getFullYear()
         ).map(([key, value]) => ({ date: parseTime2(key), close: value }));
-        console.log(timelineDataForCycleHist, "timelineData");
+        // console.log(timelineDataForCycleHist, "timelineData");
 
                 const cycleHistogram = new CycleHistogram(
           { parentElement: "#annual-cycle-histogram" },
@@ -228,12 +228,11 @@ d3.csv("data/ufo_sightings.csv")
     const mappedData = data.filter(
       (d) => d.latitude !== null && d.longitude !== null
     );
-
     // Initialize chart and then show it
     const leafletMap = new LeafletMap(
       { parentElement: "#my-map" },
       mappedData,
-      shapeColors
+      shapeColors, dataStore
     );
 
     setupEventListeners(leafletMap, uniqueYears, uniqueShapes, shapeColors);

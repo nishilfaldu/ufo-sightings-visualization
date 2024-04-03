@@ -45,13 +45,15 @@ class LeafletMap {
      * @param {Object}
      * @param {Array}
      */
-    constructor(_config, _data, _shapeColors) {
+    constructor(_config, _data, _shapeColors, _dataStore) {
       this.config = {
         parentElement: _config.parentElement,
       }
       this.data = _data;
       this.shapeColors = _shapeColors; 
       this.baseLayer = null;
+      this.dataStore = _dataStore; 
+      // console.log("datastore: const ", this.dataStore); 
 
       // Initialize the L.AreaSelect object
     //   this.areaSelect = L.areaSelect({
@@ -69,6 +71,7 @@ class LeafletMap {
    */
   initVis() {
     let vis = this;
+    // console.log("datastore: initvis ", this.dataStore); 
 
     //ESRI
     vis.esriUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
@@ -225,7 +228,11 @@ switchInput.addEventListener('change', () => {
              d.longitude <= northEast.lng;
   });
 
-  console.log("Filtered data:", filteredData);
+  // console.log("Filtered data: in leaflet initvis ", filteredData);
+  if (filteredData && filteredData.length > 0) {
+    // console.log("inside"); 
+    vis.dataStore.updateData(filteredData);
+  }
 
   });
   } else {
@@ -361,7 +368,7 @@ drawLegend(category) {
     // Remove the current base layer
     this.theMap.eachLayer((layer) => {
       if (layer instanceof L.TileLayer) {
-        console.log(layer, "layer");
+        // console.log(layer, "layer");
           this.theMap.removeLayer(layer);
       }
   });

@@ -33,20 +33,21 @@
     <h1 class="text-4xl font-medium text-center m-3">Interactive Map of UFO Sightings</h1>
     <h3 id="sightings-not-mapped" class="text-lg font-semibold text-center"></h3>
 
-    <!-- toggle for brushing in leaflet map -->
-    <h4>Toggle for leaflet map brushing</h4>
-    <label class="switch">
-      <input id="brushCheckbox" type="checkbox">
-      <span class="slider round"></span>
-    </label>
 
     <!-- <div id="color-by-options"></div> -->
     <div class="flex flex-row gap-x-4 justify-center m-5">
       <div id="map-background-options" class="border-[1px] border-black"></div>
       <div id="color-by" class="border-[1px] border-black">Color By</div>
+       <!-- toggle for brushing in leaflet map -->
+       <h3>Brush Map</h3>
+       <label class="switch">
+         <input id="brushCheckbox" type="checkbox">
+         <span class="slider round"></span>
+       </label>
     </div>
     <!-- leaflet map -->
     <div id="my-map" class="ml-auto mr-auto"></div>
+     
 
     <div class="flex flex-row justify-center items-center m-5 gap-x-4">
       <select id="first-dropdown" class="border-[1px] border-black">

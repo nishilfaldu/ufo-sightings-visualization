@@ -20,7 +20,7 @@ class Timeline {
     this.actualData = _actualData;
     this.filterDataMain = _filterDataMain; 
     this.dataStore = _dataStore; 
-
+    // this.dataStore.subscribe(this); 
     this.initVis();
   }
 
@@ -275,7 +275,7 @@ class Timeline {
             return date >= dStartDate && date <= dEndDate;
         });
         console.log(filteredData, "filteredData");
-        console.log("this.filterDataMain", this.filterDataMain); 
+        // console.log("this.filterDataMain", this.filterDataMain); 
 
         if (filteredData.length === 0) { 
           vis.dataStore.updateData(this.filterDataMain);
