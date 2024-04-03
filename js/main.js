@@ -232,6 +232,12 @@ function setupEventListeners(
     const selectedBaseLayer = event.target.value;
     leafletMap.changeBaseLayer(mapBackgrounds[selectedBaseLayer].layer);
   });
+
+  const textHighlight = document.getElementById("searchbar");
+  textHighlight.addEventListener("keyup", () => {
+    leafletMap.updateVis();
+    search_data();
+  });
 }
 
 function getRandomColorFromList() {
@@ -526,23 +532,34 @@ chooseMapBackground();
 colorByFeature();
 colorByCategories();
 
-// function search_data() {
-//   let input = document.getElementById("searchbar").value.toLowerCase();
-//   let sum_count = 0;
+// d3.select("#searchbar").onkeyup(search_data());
+// document.getElementById("searchbar").addEventListener("keyup", search_data);
 
-//   d3.csv("data/ufo_sightings.csv").then((data) => {
-//     data.forEach((d) => {
-//       if (input != "") {
-//         if (d.description.toLowerCase().match(input)) {
-//           sum_count += d.description.toLowerCase().match(input).length;
-//         }
-//       }
-//     });
-//     document.getElementById("search-frequency").innerHTML =
-//       "The phrase: '" +
-//       document.getElementById("searchbar").value +
-//       "' appears in " +
-//       sum_count +
-//       " reports";
-//   });
-// }
+function search_data() {
+  let input = document.getElementById("searchbar").value.toLowerCase();
+  let sum_count = 0;
+
+  d3.csv("data/ufo_sightings.csv").then((data) => {
+    data.forEach((d) => {
+      if (input != "") {
+        if (d.description.toLowerCase().match(input)) {
+          sum_count += d.description.toLowerCase().match(input).length;
+        }
+      }
+    });
+    if (document.getElementById("searchbar").value != "") {
+      document.getElementById("search-frequency").innerHTML =
+        "The phrase: '" +
+        document.getElementById("searchbar").value +
+        "' appears in " +
+        sum_count +
+        " report";
+      if (sum_count > 1) {
+        document.getElementById("search-frequency").innerHTML =
+          document.getElementById("search-frequency").innerHTML + "s";
+      }
+    } else {
+      document.getElementById("search-frequency").innerHTML = "";
+    }
+  });
+}

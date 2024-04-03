@@ -17,7 +17,6 @@
       <div class="container">
         <input
           id="searchbar"
-          onkeyup="search_data()"
           type="text"
           name="search"
           placeholder="Search data..."
@@ -60,7 +59,7 @@
     <script src="js/cycleHistogram.js"></script>
     <script src="js/histogram.js"></script>
     <script src="js/bc.js"></script>
-    <script>
+    <!-- <script>
       function search_data() {
         let input = document.getElementById("searchbar").value.toLowerCase();
         let sum_count = 0;
@@ -87,9 +86,10 @@
           } else {
             document.getElementById("search-frequency").innerHTML = "";
           }
+          leafletMap.updateVis()
         });
       }
-    </script>
+    </script> -->
     <div id="tooltip"></div>
   </body>
 </html>

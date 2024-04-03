@@ -146,17 +146,6 @@ class LeafletMap {
       .join("circle")
       .attr("fill", "steelblue")
       .attr("stroke", "black")
-      .style("opacity", (d) => {
-        if (
-          d.description
-            .toLowerCase()
-            .match(document.getElementById("searchbar").value.toLowerCase())
-        ) {
-          return 1;
-        } else {
-          return 0.25;
-        }
-      })
       //Leaflet has to take control of projecting points. Here we are feeding the latitude and longitude coordinates to
       //leaflet so that it can project them on the coordinates of the view. Notice, we have to reverse lat and lon.
       //Finally, the returned conversion produces an x and y point. We have to select the the desired one using .x or .y
@@ -355,7 +344,23 @@ class LeafletMap {
         "cy",
         (d) => vis.theMap.latLngToLayerPoint([d.latitude, d.longitude]).y
       )
-      .attr("r", vis.radiusSize);
+      .attr("r", vis.radiusSize)
+      .style("opacity", (d) => {
+        console.log("updating opacity");
+        if (document.getElementById("searchbar").value != "") {
+          return 1;
+        } else {
+          if (
+            d.description
+              .toLowerCase()
+              .match(document.getElementById("searchbar").value.toLowerCase())
+          ) {
+            return 1;
+          } else {
+            return 0;
+          }
+        }
+      });
   }
 
   changeBaseLayer(newBaseLayer) {
