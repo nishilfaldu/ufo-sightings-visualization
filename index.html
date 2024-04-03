@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="css/leaflet.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/output.css" >
+    <link rel="stylesheet" href="css/leaflet-areaselect.css" />
   </head>
   <style>
     .centered-container {
@@ -29,9 +30,16 @@
   }
   </style>
   <body style="background-image: url(./ufo.png); background-size: 900px 600px;">
-  </body>
     <h1 class="text-4xl font-medium text-center m-3">Interactive Map of UFO Sightings</h1>
     <h3 id="sightings-not-mapped" class="text-lg font-semibold text-center"></h3>
+
+    <!-- toggle for brushing in leaflet map -->
+    <h4>Toggle for leaflet map brushing</h4>
+    <label class="switch">
+      <input id="brushCheckbox" type="checkbox">
+      <span class="slider round"></span>
+    </label>
+
     <!-- <div id="color-by-options"></div> -->
     <div class="flex flex-row gap-x-4 justify-center m-5">
       <div id="map-background-options" class="border-[1px] border-black"></div>
@@ -94,12 +102,13 @@
     <script src="js/d3.v6.min.js"></script>
     <script type="module" src="js/main.js"></script>
     <script src="js/leaflet.js"></script>
-    <script src="js/leafletMap.js"></script>
     <script src="js/barchart.js"></script>
     <script src="js/tod.js"></script>
     <script src="js/timeline.js"></script>
     <script src="js/cycleHistogram.js"></script>
     <script src = "js/histogram.js"></script>
+    <script src="js/leaflet-areaselect.js"></script>
+    <script src="js/leafletMap.js"></script>
     <script src="js/bc.js"></script>
 
     <div id="tooltip"></div>

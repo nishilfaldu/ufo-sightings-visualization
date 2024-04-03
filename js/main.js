@@ -237,8 +237,7 @@ d3.csv("data/ufo_sightings.csv")
     );
 
     setupEventListeners(leafletMap, uniqueYears, uniqueShapes, shapeColors);
-  })
-  .catch((error) => console.error(error));
+
 
 function setupEventListeners(
   leafletMap,
