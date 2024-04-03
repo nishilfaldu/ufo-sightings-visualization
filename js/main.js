@@ -115,7 +115,7 @@ d3.csv("data/ufo_sightings.csv")
         dataStore: dataStore
       });
 
-
+    
 
       const timelineDataForCycleHist = d3.rollups(
         filteredData, v => v.length, d => (new Date(d.date_time).getMonth() + 1).toString() + "/" + new Date(d.date_time).getDate().toString() + "/" + new Date(d.date_time).getFullYear()
@@ -213,7 +213,7 @@ d3.csv("data/ufo_sightings.csv")
       }
     });
 
-    
+
     // Convert sets to arrays for any further use
     uniqueYears = Array.from(years);
     uniqueShapes = Array.from(shapes);
@@ -237,8 +237,8 @@ d3.csv("data/ufo_sightings.csv")
     );
 
     setupEventListeners(leafletMap, uniqueYears, uniqueShapes, shapeColors);
-
-
+    
+  }); 
 function setupEventListeners(
   leafletMap,
   uniqueYears,
