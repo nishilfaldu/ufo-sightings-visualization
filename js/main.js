@@ -1,5 +1,5 @@
 import { CentralDataStore } from "./CentralDataStore.js";
-const dataStore = new CentralDataStore(); 
+const dataStore = new CentralDataStore();
 
 var parseTime = d3.timeParse("%m/%d/%Y %H:%M");
 var date_array = {};
@@ -37,7 +37,6 @@ function populateSecondDropdown(selectedOption, secondDropdownOptions) {
   });
 }
 
-
 function convertToCSV(arr) {
   const array = [Object.keys(arr[0])].concat(arr);
 
@@ -51,193 +50,221 @@ function convertToCSV(arr) {
 let uniqueYears = new Array();
 let uniqueShapes = new Array();
 
-d3.csv("data/ufo_sightings.csv")
-  .then((data) => {
-    // console.log(data);
-    // console.log(data.length);
+d3.csv("data/ufo_sightings.csv").then((data) => {
+  // console.log(data);
+  // console.log(data.length);
 
-    let notMappedCount = 0;
-    const years = new Set();
-    const shapes = new Set();
-    const shapeColors = {}; // Object to hold UFO shape to color mapping
+  let notMappedCount = 0;
+  const years = new Set();
+  const shapes = new Set();
+  const shapeColors = {}; // Object to hold UFO shape to color mapping
 
-    // Define options for the second dropdown based on the selection in the first dropdown
-    const secondDropdownOptions = {
-      date_time: extractUniqueYears(data),
-      city_area: [...new Set(data.map((d) => d.city_area))],
-      state: [...new Set(data.map((d) => d.state))],
-      country: [...new Set(data.map((d) => d.country))],
-      ufo_shape: [...new Set(data.map((d) => d.ufo_shape))],
-    };
+  // Define options for the second dropdown based on the selection in the first dropdown
+  const secondDropdownOptions = {
+    date_time: extractUniqueYears(data),
+    city_area: [...new Set(data.map((d) => d.city_area))],
+    state: [...new Set(data.map((d) => d.state))],
+    country: [...new Set(data.map((d) => d.country))],
+    ufo_shape: [...new Set(data.map((d) => d.ufo_shape))],
+  };
 
-    // console.log(secondDropdownOptions, "secondDropdownOptions");
+  // console.log(secondDropdownOptions, "secondDropdownOptions");
 
-    // Attach event listener to the first dropdown
-    const firstDropdown = document.getElementById("first-dropdown");
-    firstDropdown.addEventListener("change", function (event) {
-      const selectedOption = event.target.value;
-      // console.log(selectedOption);
-      populateSecondDropdown(selectedOption, secondDropdownOptions);
-    });
+  // Attach event listener to the first dropdown
+  const firstDropdown = document.getElementById("first-dropdown");
+  firstDropdown.addEventListener("change", function (event) {
+    const selectedOption = event.target.value;
+    // console.log(selectedOption);
+    populateSecondDropdown(selectedOption, secondDropdownOptions);
+  });
 
-    populateSecondDropdown(firstDropdown.value, secondDropdownOptions);
+  populateSecondDropdown(firstDropdown.value, secondDropdownOptions);
 
-    const secondDropdown = document.getElementById("second-dropdown");
-    secondDropdown.addEventListener("change", function (event) {
-      d3.select("#barchart").selectAll("*").remove();
-      d3.select("#bc").selectAll("*").remove();
-      d3.select("#tod").selectAll("*").remove();
-      d3.select("#annual-cycle-histogram").selectAll("*").remove(); 
-      const selectedOption = firstDropdown.value;
-      const selectedValue = event.target.value;
-      const filteredData = filterData(
-        secondDropdownOptions,
-        selectedOption,
-        selectedValue,
-        data
-      );
-
-      const barchart = new Barchart(
-        { parentElement: "#barchart" },
-        filteredData, dataStore
-      );
-     
-      const timelineData = d3.rollups(filteredData, v => v.length, d => new Date(d.date_time).getDate());
-      // console.log(timelineData, "timelineData");
-
-      const tod = new TimeOfDayBarChart({ parentElement: "#tod" }, filteredData, 
-      dataStore
-      );
-
-      const bc = new BC({
-        data: filteredData,
-        element: "#bc", // The selector for the container to hold the bar chart
-        dataStore: dataStore
-      });
-
-    
-
-      const timelineDataForCycleHist = d3.rollups(
-        filteredData, v => v.length, d => (new Date(d.date_time).getMonth() + 1).toString() + "/" + new Date(d.date_time).getDate().toString() + "/" + new Date(d.date_time).getFullYear()
-        ).map(([key, value]) => ({ date: parseTime2(key), close: value }));
-        // console.log(timelineDataForCycleHist, "timelineData");
-
-                const cycleHistogram = new CycleHistogram(
-          { parentElement: "#annual-cycle-histogram" },
-          timelineDataForCycleHist, dataStore
-        );
-  
-
-    })
-
-    // Process each data point
-    data.forEach((d) => {
-      d.latitude = d.latitude && !isNaN(d.latitude) ? +d.latitude : null;
-      d.longitude = d.longitude && !isNaN(d.longitude) ? +d.longitude : null;
-      d.encounter_length = d.encounter_length ? +d.encounter_length : null;
-      if (d.encounter_length && !isNaN(d.encounter_length)) {
-        encounterLengths.push(+d.encounter_length); // Unary plus ensures it's a number
-      }
-
-      // Increment notMappedCount if coordinates are missing
-      if (!d.latitude || !d.longitude) {
-        notMappedCount++;
-      }
-
-      // Handle UFO shape
-      const shape = d.ufo_shape;
-      if (shape && typeof shape === "string" && shape.toLowerCase() !== "na") {
-        // const normalizedShape = shape.charAt(0).toUpperCase() + shape.slice(1).toLowerCase();
-        shapes.add(shape);
-
-        // Assign a color if not already done
-        if (!shapeColors[shape]) {
-          shapeColors[shape] = getRandomColorFromList();
-        }
-      }
-
-      // Handle year
-      const year = new Date(d.date_time).getFullYear();
-      if (!isNaN(year)) {
-        years.add(year);
-      }
-    });
-
-    // only used for initial rendering
+  const secondDropdown = document.getElementById("second-dropdown");
+  secondDropdown.addEventListener("change", function (event) {
+    d3.select("#barchart").selectAll("*").remove();
+    d3.select("#bc").selectAll("*").remove();
+    d3.select("#tod").selectAll("*").remove();
+    d3.select("#annual-cycle-histogram").selectAll("*").remove();
     const selectedOption = firstDropdown.value;
-    const secondDropdownValue = secondDropdown.value;
+    const selectedValue = event.target.value;
     const filteredData = filterData(
       secondDropdownOptions,
       selectedOption,
-      secondDropdownValue,
+      selectedValue,
       data
     );
 
+    const barchart = new Barchart(
+      { parentElement: "#barchart" },
+      filteredData,
+      dataStore
+    );
 
-    const barchart = new Barchart({ parentElement: "#barchart" }, filteredData, 
-    dataStore
+    const timelineData = d3.rollups(
+      filteredData,
+      (v) => v.length,
+      (d) => new Date(d.date_time).getDate()
     );
-    const tod = new TimeOfDayBarChart({ parentElement: "#tod" }, filteredData, 
-    dataStore
+    // console.log(timelineData, "timelineData");
+
+    const tod = new TimeOfDayBarChart(
+      { parentElement: "#tod" },
+      filteredData,
+      dataStore
     );
+
     const bc = new BC({
       data: filteredData,
       element: "#bc", // The selector for the container to hold the bar chart
-      // width: 1790,
-      // height: 1200,
-      dataStore: dataStore
+      dataStore: dataStore,
     });
 
-    const timelineData = d3.rollups(
-      data, v => v.length, d => (new Date(d.date_time).getMonth() + 1).toString() + "/" + new Date(d.date_time).getDate().toString() + "/" + new Date(d.date_time).getFullYear()
-      ).map(([key, value]) => ({ date: parseTime2(key), close: value }));
-    timelineData.sort(function(a, b){
-      let c = new Date(a.date);
-      let d = new Date(b.date);
-      return c-d;
-    });
+    const timelineDataForCycleHist = d3
+      .rollups(
+        filteredData,
+        (v) => v.length,
+        (d) =>
+          (new Date(d.date_time).getMonth() + 1).toString() +
+          "/" +
+          new Date(d.date_time).getDate().toString() +
+          "/" +
+          new Date(d.date_time).getFullYear()
+      )
+      .map(([key, value]) => ({ date: parseTime2(key), close: value }));
+    // console.log(timelineDataForCycleHist, "timelineData");
 
-
-    let cycleHistogram = new CycleHistogram(
+    const cycleHistogram = new CycleHistogram(
       { parentElement: "#annual-cycle-histogram" },
-      timelineData, dataStore
+      timelineDataForCycleHist,
+      dataStore
     );
-    const timeline = new Timeline({ parentElement: "#timeline" }, GroupByMonth(timelineData), data, filteredData, dataStore
-    );
+  });
 
-    document.getElementById('clear-brush-button').addEventListener('click', () => {
-      dataStore.updateData(filteredData); 
+  // Process each data point
+  data.forEach((d) => {
+    d.latitude = d.latitude && !isNaN(d.latitude) ? +d.latitude : null;
+    d.longitude = d.longitude && !isNaN(d.longitude) ? +d.longitude : null;
+    d.encounter_length = d.encounter_length ? +d.encounter_length : null;
+    if (d.encounter_length && !isNaN(d.encounter_length)) {
+      encounterLengths.push(+d.encounter_length); // Unary plus ensures it's a number
+    }
+
+    // Increment notMappedCount if coordinates are missing
+    if (!d.latitude || !d.longitude) {
+      notMappedCount++;
+    }
+
+    // Handle UFO shape
+    const shape = d.ufo_shape;
+    if (shape && typeof shape === "string" && shape.toLowerCase() !== "na") {
+      // const normalizedShape = shape.charAt(0).toUpperCase() + shape.slice(1).toLowerCase();
+      shapes.add(shape);
+
+      // Assign a color if not already done
+      if (!shapeColors[shape]) {
+        shapeColors[shape] = getRandomColorFromList();
+      }
+    }
+
+    // Handle year
+    const year = new Date(d.date_time).getFullYear();
+    if (!isNaN(year)) {
+      years.add(year);
+    }
+  });
+
+  // only used for initial rendering
+  const selectedOption = firstDropdown.value;
+  const secondDropdownValue = secondDropdown.value;
+  const filteredData = filterData(
+    secondDropdownOptions,
+    selectedOption,
+    secondDropdownValue,
+    data
+  );
+
+  const barchart = new Barchart(
+    { parentElement: "#barchart" },
+    filteredData,
+    dataStore
+  );
+  const tod = new TimeOfDayBarChart(
+    { parentElement: "#tod" },
+    filteredData,
+    dataStore
+  );
+  const bc = new BC({
+    data: filteredData,
+    element: "#bc", // The selector for the container to hold the bar chart
+    // width: 1790,
+    // height: 1200,
+    dataStore: dataStore,
+  });
+
+  const timelineData = d3
+    .rollups(
+      data,
+      (v) => v.length,
+      (d) =>
+        (new Date(d.date_time).getMonth() + 1).toString() +
+        "/" +
+        new Date(d.date_time).getDate().toString() +
+        "/" +
+        new Date(d.date_time).getFullYear()
+    )
+    .map(([key, value]) => ({ date: parseTime2(key), close: value }));
+  timelineData.sort(function (a, b) {
+    let c = new Date(a.date);
+    let d = new Date(b.date);
+    return c - d;
+  });
+
+  let cycleHistogram = new CycleHistogram(
+    { parentElement: "#annual-cycle-histogram" },
+    timelineData,
+    dataStore
+  );
+  const timeline = new Timeline(
+    { parentElement: "#timeline" },
+    GroupByMonth(timelineData),
+    data,
+    filteredData,
+    dataStore
+  );
+
+  document
+    .getElementById("clear-brush-button")
+    .addEventListener("click", () => {
+      dataStore.updateData(filteredData);
 
       if (timeline.brushG && timeline.brush) {
         timeline.brushG.call(timeline.brush.move, null);
       }
     });
 
+  // Convert sets to arrays for any further use
+  uniqueYears = Array.from(years);
+  uniqueShapes = Array.from(shapes);
 
-    // Convert sets to arrays for any further use
-    uniqueYears = Array.from(years);
-    uniqueShapes = Array.from(shapes);
+  // Display the count of sightings not mapped
+  const notMappedCountElement = document.getElementById("sightings-not-mapped");
+  notMappedCountElement.innerHTML = `Sightings not mapped: ${notMappedCount}`;
 
-    // Display the count of sightings not mapped
-    const notMappedCountElement = document.getElementById(
-      "sightings-not-mapped"
-    );
-    notMappedCountElement.innerHTML = `Sightings not mapped: ${notMappedCount}`;
+  // Filter out data points with null latitude or longitude for mapping
+  const mappedData = data.filter(
+    (d) => d.latitude !== null && d.longitude !== null
+  );
+  // Initialize chart and then show it
+  const leafletMap = new LeafletMap(
+    { parentElement: "#my-map" },
+    mappedData,
+    shapeColors,
+    dataStore
+  );
 
-    // Filter out data points with null latitude or longitude for mapping
-    const mappedData = data.filter(
-      (d) => d.latitude !== null && d.longitude !== null
-    );
-    // Initialize chart and then show it
-    const leafletMap = new LeafletMap(
-      { parentElement: "#my-map" },
-      mappedData,
-      shapeColors, dataStore
-    );
-
-    setupEventListeners(leafletMap, uniqueYears, uniqueShapes, shapeColors);
-    
-  }); 
+  setupEventListeners(leafletMap, uniqueYears, uniqueShapes, shapeColors);
+});
 function setupEventListeners(
   leafletMap,
   uniqueYears,
@@ -547,26 +574,29 @@ function extractUniqueYears(data) {
   return Array.from(uniqueYears);
 }
 
-function GroupByMonth(data){
+function GroupByMonth(data) {
   let groupedData = [];
-  let dayToMonth = data.map(x => ({...x, date: new Date(x.date.getFullYear(), x.date.getMonth(), 1)}));
-  let sumPerMonth = dayToMonth.reduce((acc, cur) =>{
+  let dayToMonth = data.map((x) => ({
+    ...x,
+    date: new Date(x.date.getFullYear(), x.date.getMonth(), 1),
+  }));
+  let sumPerMonth = dayToMonth.reduce((acc, cur) => {
     acc[cur.date] = acc[cur.date] + cur.close || cur.close;
     return acc;
   }, {});
   groupedData = [];
-  for(let i = 0; i < Object.keys(sumPerMonth).length; i++){
+  for (let i = 0; i < Object.keys(sumPerMonth).length; i++) {
     let key = Object.keys(sumPerMonth)[i];
     let object = {
       date: new Date(key),
-      close: sumPerMonth[key]
-    }
+      close: sumPerMonth[key],
+    };
     groupedData.push(object);
   }
-  groupedData.sort(function(a, b){
+  groupedData.sort(function (a, b) {
     let c = new Date(a.date);
     let d = new Date(b.date);
-    return c-d;
+    return c - d;
   });
   return groupedData;
 }
@@ -574,3 +604,35 @@ function GroupByMonth(data){
 chooseMapBackground();
 colorByFeature();
 colorByCategories();
+
+function search_data() {
+  let input = document.getElementById("search-input").value.toLowerCase();
+  let sum_count = 0;
+
+  d3.csv("data/ufo_sightings.csv").then((data) => {
+    data.forEach((d) => {
+      if (input != "") {
+        if (d.description.toLowerCase().match(input)) {
+          sum_count += d.description.toLowerCase().match(input).length;
+        }
+      }
+    });
+    if (document.getElementById("search-input").value != "") {
+      document.getElementById("search-frequency").innerHTML =
+        "The phrase: '" +
+        document.getElementById("search-input").value +
+        "' appears in " +
+        sum_count +
+        " report";
+      if (sum_count > 1) {
+        document.getElementById("search-frequency").innerHTML =
+          document.getElementById("search-frequency").innerHTML + "s";
+      }
+    } else {
+      document.getElementById("search-frequency").innerHTML = "";
+    }
+  });
+}
+
+document.getElementById("submit-button").addEventListener("click", search_data);
+document.getElementById("clear-button").addEventListener("click", search_data);

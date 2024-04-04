@@ -213,7 +213,7 @@ class LeafletMap {
         const isInFilteredData = filteredData.some(filteredDatum => filteredDatum === d);
         
         // Set opacity based on whether the data point is in the filtered data
-        return isInFilteredData ? 1 : 0.3;
+        return isInFilteredData ? 1 : 0.05;
       });
 
       
