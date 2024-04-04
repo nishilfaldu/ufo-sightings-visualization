@@ -78,6 +78,8 @@ These visualizations were made using the [d3 library](https://d3js.org/) and jav
 
 ### Demo Video
 
+Our demo video can be found [here](https://youtu.be/s8IjDdedydg)
+
 ---
 
 ### Distribution of Tasks
