@@ -345,8 +345,8 @@ class LeafletMap {
         (d) => vis.theMap.latLngToLayerPoint([d.latitude, d.longitude]).y
       )
       .attr("r", vis.radiusSize)
-      .style("opacity", (d) => {
-        console.log("updating opacity");
+      .attr("fill-opacity", (d) => {
+        // console.log("updating opacity");
         if (document.getElementById("searchbar").value != "") {
           return 1;
         } else {
