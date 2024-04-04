@@ -128,10 +128,10 @@ class LeafletMap {
 
     //these are the city locations, displayed as a set of dots 
     vis.Dots = vis.svg.selectAll('circle')
-                    .data(vis.data) 
+                    .data(vis.data)
                     .join('circle')
-                        .attr("fill", "steelblue") 
-                        .attr("stroke", "black")
+                        .attr("fill", "steelblue")
+                        // .attr("stroke", "black")
                         //Leaflet has to take control of projecting points. Here we are feeding the latitude and longitude coordinates to
                         //leaflet so that it can project them on the coordinates of the view. Notice, we have to reverse lat and lon.
                         //Finally, the returned conversion produces an x and y point. We have to select the the desired one using .x or .y
@@ -191,6 +191,39 @@ class LeafletMap {
     });
     vis.colorByPoints('year');
     vis.drawLegend('year');
+
+
+    const searchInput = document.getElementById('search-input');
+    const submitButton = document.getElementById('submit-button');
+  const clearButton = document.getElementById('clear-button');
+
+    submitButton.addEventListener('click', function() {
+      const searchText = searchInput.value.toLowerCase().trim();
+
+      if(searchText === '') {
+        alert('Please enter a search term');
+        return;
+      }
+
+      // Filter the data based on the search term
+      const filteredData = vis.data.filter(d => d.description.toLowerCase().includes(searchText));
+
+      vis.Dots.attr('fill-opacity', d => {
+        // Check if the current data point is in the filtered data
+        const isInFilteredData = filteredData.some(filteredDatum => filteredDatum === d);
+        
+        // Set opacity based on whether the data point is in the filtered data
+        return isInFilteredData ? 1 : 0.3;
+      });
+
+      
+    });
+
+    clearButton.addEventListener('click', function() {
+      searchInput.value = '';
+      
+      vis.Dots.attr('fill-opacity', 1);
+    });
 
 
     // Read the bounding box
