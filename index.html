@@ -5,143 +5,16 @@
     <link rel="icon" href="data:;base64,iVBORwOKGO=" />
     <link rel="stylesheet" href="css/leaflet.css" />
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/output.css" >
+    <link rel="stylesheet" href="css/output.css" />
     <link rel="stylesheet" href="css/leaflet-areaselect.css" />
   </head>
   <style>
-    /* Base styling for the switch */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-
-/* Hide the default checkbox */
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* Style for the slider */
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc; /* Default background */
-  -webkit-transition: .4s; /* Transition for smooth toggling */
-  transition: .4s;
-  border-radius: 34px; /* Rounded corners for the slider */
-}
-
-/* Circle inside the slider */
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-  border-radius: 50%; /* Makes the slider circle perfectly round */
-}
-
-/* Changes the background color of the slider when checked */
-input:checked + .slider {
-  background-color: #2196F3; /* Blue background for checked state */
-}
-
-/* Moves the slider circle to the right when checked */
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Optional: styles for focus state to improve accessibility */
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-    h3 {
-      color: #333; /* Dark grey color for text */
-      font-family: 'Arial', sans-serif; /* Font family */
-      margin-bottom: 20px; /* Space between the header and the switch */
-    }
-    
-    .border-black {
-      border-color: #000 !important; /* Ensuring border color is explicitly set */
-    }
-    #color-by {
-      border-style: dashed; /* Change border style to dashed for visual distinction */
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
-    }
-    
-    #color-by:hover {
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* More pronounced shadow on hover */
-    }
-
-    #map-background-options, #color-by {
-      display: flex; /* Use flexbox for layout */
-      align-items: center; /* Center items vertically */
-      gap: 10px; /* Space between text and any child elements, like icons */
-    }
-    
-    .icon {
-      width: 16px; /* Example width */
-      height: 16px; /* Example height */
-      margin-right: 8px; /* Space before the text */
-    }
-    
-    
-    /* Applying a consistent base style to both divs */
-    #map-background-options, #color-by {
-      padding: 10px 20px;
-      margin: 10px 0;
-      border-radius: 8px; /* Rounded corners */
-      background-color: #f9f9f9; /* Light background for contrast */
-      color: #333; /* Darker text for readability */
-      font-family: 'Arial', sans-serif; /* Font family */
-      transition: all 0.3s ease; /* Smooth transition for hover effects */
-    }
-    
-    /* Hover effect for interactivity */
-    #map-background-options:hover, #color-by:hover {
-      background-color: #e7e7e7; /* Slightly darker background on hover */
-      cursor: pointer; /* Change cursor to indicate clickable */
-    }
-    
-    #search-input {
-      width: 100%;
-      padding: 15px;
-      margin: 10px 0;
-      border: 2px solid #007bff; /* Blue border */
-      border-radius: 4px;
-      outline: none; /* Removes the outline */
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle shadow */
-    }
-    
-    #search-input:focus {
-      border-color: #0056b3; /* Darker blue border on focus */
-      box-shadow: 0 2px 8px rgba(0,0,0,0.4); /* Slightly more pronounced shadow on focus */
-    }
- 
-    #search-input::placeholder {
-      color: #bfbfbf; /* Light grey color */
-      font-style: italic; /* Italic font style */
-    }
     .centered-container {
       justify-content: center; /* Center horizontally */
-  }
+    }
 
     #clear-brush-button {
-      background-color: #4CAF50; /* Green background */
+      background-color: #4caf50; /* Green background */
       border: none; /* Remove borders */
       color: white; /* White text */
       padding: 10px 20px; /* Some padding */
@@ -150,171 +23,49 @@ input:focus + .slider {
       cursor: pointer; /* Pointer/hand icon */
       border-radius: 12px; /* Rounded corners */
       transition: background-color 0.3s; /* Smooth transition for hover effect */
-  }
+    }
 
-  #clear-brush-button:hover {
+    #clear-brush-button:hover {
       background-color: #45a049; /* Darker shade of green */
-  }
-
-  #clear-search-button {
-    background-color: red; /* Green background */
-    border: none; /* Remove borders */
-    color: white; /* White text */
-    padding: 10px 20px; /* Some padding */
-    font-size: 16px; /* Increase font size */
-    margin: 4px 2px; /* Some margin */
-    cursor: pointer; /* Pointer/hand icon */
-    border-radius: 12px; /* Rounded corners */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
-}
-
-#clear-search-button:hover {
-    background-color: #bc544b; /* Darker shade of green */
-}
-/* General container styling */
-.flex {
-  display: flex;
-  flex-direction: row;
-  gap: 16px; /* Adjusts the gap between elements */
-  justify-content: center;
-  margin: 20px;
-}
-
-/* Border and padding for the map and color by sections */
-#map-background-options, #color-by {
-  border: 1px solid black;
-  padding: 10px;
-  width: auto; /* Adjust based on content or preference */
-  text-align: center; /* Center the text inside the div */
-}
-
-/* Styling for the brush map section */
-h3 {
-  margin: 0;
-  font-size: 1em; /* Adjust based on your design preferences */
-  color: #333; /* Dark gray for better readability */
-}
-
-/* Custom switch (toggle) styling */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px; /* Width of the switch */
-  height: 34px; /* Height of the switch */
-}
-
-/* The slider */
-.switch .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc; /* Off state */
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px; /* Height of the circle */
-  width: 26px; /* Width of the circle */
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #2196F3; /* On state */
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-
-/* Dropdown styling */
-select {
-  border: 1px solid black; /* Keeps the simple black border */
-  padding: 5px; /* Reduces padding for a smaller box */
-  font-size: 14px; /* Reduces font size for compact appearance */
-  cursor: pointer; /* Keeps the cursor to indicate it's clickable */
-  border-radius: 4px; /* Keeps the rounded corners for a modern look */
-  appearance: none; /* Keeps the default styling removed */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-color: #fff; /* Keeps the white background color */
-  color: #333; /* Keeps the text color to dark gray for contrast */
-  width: auto; /* Keeps width auto-adjusting based on content */
-  max-width: 150px; /* Sets a maximum width to control the size */
-}
-
-/* Custom arrow styling for dropdown */
-select {
-  background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 5px center; /* Adjusts the position to fit the smaller padding */
-  background-size: 12px; /* Keeps the arrow size appropriate */
-}
-
-/* Hover effect for dropdown */
-select:hover {
-  border-color: #888; /* Keeps the hover effect */
-}
-
-/* Focus effect for dropdown (when selected/tabbed into) */
-select:focus {
-  outline: none; /* Keeps the focus outline removed */
-  border-color: #555; /* Keeps the focus indicator */
-}
-
-
+    }
   </style>
-  <body style="background-image: url(./ufo.png); background-size: 900px 600px;">
-    <h1 class="text-4xl font-medium text-center m-3">Interactive Map of UFO Sightings</h1>
-    <h3 id="sightings-not-mapped" class="text-lg font-semibold text-center"></h3>
-
+  <body style="background-image: url(./ufo.png); background-size: 900px 600px">
+    <h1 class="text-4xl font-medium text-center m-3">
+      Interactive Map of UFO Sightings
+    </h1>
+    <h3
+      id="sightings-not-mapped"
+      class="text-lg font-semibold text-center"
+    ></h3>
 
     <!-- <div id="color-by-options"></div> -->
     <div class="flex flex-row gap-x-4 justify-center m-5">
       <div id="map-background-options" class="border-[1px] border-black"></div>
       <div id="color-by" class="border-[1px] border-black">Color By</div>
-       <!-- toggle for brushing in leaflet map -->
-       <h3>Brush Map</h3>
-       <label class="switch">
-         <input id="brushCheckbox" type="checkbox">
-         <span class="slider round"></span>
-       </label>
-       </div>
-      </div> 
-      <div  class="flex flex-row gap-x-4 justify-center m-5">
-       <div id="search-container" class="flex gap-x-4">
-        <input type="text" id="search-input" placeholder="Search for a word/phrase">
-        <button id="clear-brush-button" class="border-[1px] border-black">Search</button>
-        <button id="clear-search-button" class="border-[1px] border-black">Clear Search</button>
+      <!-- toggle for brushing in leaflet map -->
+      <h3>Brush Map</h3>
+      <label class="switch">
+        <input id="brushCheckbox" type="checkbox" />
+        <span class="slider round"></span>
+      </label>
+
+      <div id="search-container" class="flex gap-x-4">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search for a word/phrase..."
+        />
+        <button id="submit-button" class="border-[1px] border-black">
+          Search
+        </button>
+        <button id="clear-button" class="border-[1px] border-black">
+          Clear Search
+        </button>
+        <div id="search-frequency"></div>
       </div>
     </div>
     <!-- leaflet map -->
     <div id="my-map" class="ml-auto mr-auto"></div>
-     
 
     <div class="flex flex-row justify-center items-center m-5 gap-x-4">
       <select id="first-dropdown" class="border-[1px] border-black">
@@ -324,38 +75,44 @@ select:focus {
         <option value="country">Country</option>
         <option value="ufo_shape">UFO Shape</option>
       </select>
-      <select id="second-dropdown" class="border-black" style = "width: 75px"></select>
+      <select id="second-dropdown" class="border-[1px] border-black"></select>
     </div>
 
     <div class="grid grid-cols-2 ml-auto mr-auto justify-center items-center">
-    <!-- timeline -->
-    <div class="col-span-2 flex justify-center m-5">
-      <svg id="timeline"></svg> 
-    </div>
-    <div class="col-span-2 flex justify-center m-5">
-      <button id="clear-search-button">Clear Brushing</button>
-  </div>
+      <!-- timeline -->
+      <div class="col-span-2 flex justify-center m-5">
+        <svg id="timeline"></svg>
+      </div>
+      <div class="col-span-2 flex justify-center m-5">
+        <button id="clear-brush-button">Clear Brushing</button>
+      </div>
 
-    <!-- annual-cycle histogram -->
-    <div>
-      <h4  style = "margin-left: 60px">Number of UFO Sightings  </h4>
-        <select id="annual-cycle-dropdown" class="border-[1px] border-black w-[200px]" style = "margin-left: 60px">
+      <!-- annual-cycle histogram -->
+      <div class="flex flex-col gap-y-2">
+        <h4 style="margin-left: 60px">Number of UFO Sightings</h4>
+        <select
+          id="annual-cycle-dropdown"
+          class="border-[1px] border-black w-[200px]"
+          style="margin-left: 60px"
+        >
           <option value="month">By Month</option>
           <option value="day">By Day of the Week</option>
           <option value="season">By Season</option>
         </select>
-      <svg id="annual-cycle-histogram" height="250"></svg>
-    </div>
-      
-    <!-- barchart -->
+        <svg id="annual-cycle-histogram" height="250"></svg>
+      </div>
+
+      <!-- barchart -->
       <div>
-        <h4>Number of UFO Sightings by UFO Shape </h4>
+        <h4>Number of UFO Sightings by UFO Shape</h4>
         <svg id="barchart"></svg>
       </div>
 
       <!-- time of day barchart -->
       <div>
-        <h4 style = "margin-left: 60px">Number of UFO Sightings by Time of Day </h4>
+        <h4 style="margin-left: 60px">
+          Number of UFO Sightings by Time of Day
+        </h4>
         <svg id="tod"></svg>
       </div>
 
@@ -364,7 +121,6 @@ select:focus {
         <h4>Frequency of Encounter Length</h4>
         <div id="bc"></div>
       </div>
-
     </div>
 
     <script src="js/d3.v6.min.js"></script>
@@ -374,7 +130,7 @@ select:focus {
     <script src="js/tod.js"></script>
     <script src="js/timeline.js"></script>
     <script src="js/cycleHistogram.js"></script>
-    <script src = "js/histogram.js"></script>
+    <script src="js/histogram.js"></script>
     <script src="js/leaflet-areaselect.js"></script>
     <script src="js/leafletMap.js"></script>
     <script src="js/bc.js"></script>
